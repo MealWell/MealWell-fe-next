@@ -17,14 +17,12 @@ export default function NewsletterForm() {
     success: boolean;
   } | null>(null);
 
-  const {
-    reset,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<NewsletterFormValues>({
-    resolver: zodResolver(newsletterSchema),
-  });
+  const { reset, register, handleSubmit, formState } =
+    useForm<NewsletterFormValues>({
+      resolver: zodResolver(newsletterSchema),
+    });
+
+  const errors = formState.errors;
 
   const onSubmit = async (data: NewsletterFormValues) => {
     try {
@@ -94,7 +92,11 @@ export default function NewsletterForm() {
         <Label htmlFor="message">Message (Optional)</Label>
         <Textarea id="message" {...register("message")} />
       </div>
-      <Button type="submit" className="w-full">
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={formState.isSubmitting}
+      >
         Subscribe
       </Button>
       {serverResponse && (

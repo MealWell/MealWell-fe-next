@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
 import { NewsletterFormValues, newsletterSchema } from "@/const/newsletter";
+import { logEventClient, PostHogEventType } from "@/lib/posthog";
 
 export default function NewsletterForm() {
   const [serverResponse, setServerResponse] = useState<{
@@ -27,6 +28,10 @@ export default function NewsletterForm() {
 
   const onSubmit = async (data: NewsletterFormValues) => {
     try {
+      logEventClient({
+        eventType: PostHogEventType.SUBMIT_FORM,
+        form: "newsletter",
+      });
       const response = await fetch("/api/newsletter", {
         method: "POST",
         headers: {
@@ -41,9 +46,19 @@ export default function NewsletterForm() {
       if (result.success === true) {
         reset();
       }
+      logEventClient({
+        eventType: PostHogEventType.SUBMIT_FORM,
+        form: "newsletter",
+        submitStatus: !!result.success ? "success" : "error",
+      });
     } catch (error) {
       console.log(error);
       setServerResponse({ message: "Something went wrong", success: false });
+      logEventClient({
+        eventType: PostHogEventType.SUBMIT_FORM,
+        form: "newsletter",
+        submitStatus: "error",
+      });
     }
   };
 

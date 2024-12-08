@@ -27,8 +27,10 @@ export default function Home() {
               </p>
             </div>
             <div className="space-x-4">
-              <Button size="lg">Get Started</Button>
-              <Button variant="outline" size="lg">
+              <Button size="lg" disabled={true}>
+                Get Started
+              </Button>
+              <Button variant="outline" size="lg" disabled={true}>
                 Learn More
               </Button>
             </div>
@@ -189,7 +191,7 @@ export default function Home() {
             </Card>
           </div>
           <div className="mt-10 text-center">
-            <Button>
+            <Button disabled={true}>
               View All Plans
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -252,7 +254,9 @@ export default function Home() {
               </p>
             </div>
             <div className="space-x-4">
-              <Button size="lg">Get Started Now</Button>
+              <Button size="lg" disabled={true}>
+                Get Started Now
+              </Button>
             </div>
           </div>
         </div>

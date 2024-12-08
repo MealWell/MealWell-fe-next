@@ -10,6 +10,13 @@ export const metadata: Metadata = {
     default: "MealWell",
   },
   description: "The MealWell application",
+  openGraph: {
+    title: {
+      template: "%s | MealWell",
+      default: "MealWell",
+    },
+    description: "MealWell - Healthy Eating Made Simple",
+  },
 };
 
 export default function RootLayout({

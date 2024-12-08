@@ -1,16 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChefHat, X } from "lucide-react";
 import { FaHamburger } from "react-icons/fa";
+import posthog from "posthog-js";
+
+interface NavItem {
+  href: string;
+  label: string;
+}
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+  const [fikiEnabled, setFikiEnabled] = useState(false);
 
-  const navItems = [{ href: "/fiki", label: "Fiki" }];
+  useEffect(() => {
+    posthog.onFeatureFlags(function () {
+      if (posthog.isFeatureEnabled("enable-fiki-navigation")) {
+        setFikiEnabled(true);
+      }
+    });
+  }, [setFikiEnabled]);
+
+  const navItems: NavItem[] = [
+    fikiEnabled && { href: "/fiki", label: "Fiki" },
+  ].filter((item): item is NavItem => Boolean(item));
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm">
@@ -35,18 +52,20 @@ export default function Navbar() {
           </nav>
 
           {/* Mobile Menu Toggle */}
-          <button
-            className="sm:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-            onClick={toggleMenu}
-            aria-expanded={menuOpen}
-          >
-            <span className="sr-only">Open main menu</span>
-            {menuOpen ? (
-              <X className="block h-6 w-6" aria-hidden="true" />
-            ) : (
-              <FaHamburger className="block h-6 w-6" aria-hidden="true" />
-            )}
-          </button>
+          {navItems.length > 0 && (
+            <button
+              className="sm:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+              onClick={toggleMenu}
+              aria-expanded={menuOpen}
+            >
+              <span className="sr-only">Open main menu</span>
+              {menuOpen ? (
+                <X className="block h-6 w-6" aria-hidden="true" />
+              ) : (
+                <FaHamburger className="block h-6 w-6" aria-hidden="true" />
+              )}
+            </button>
+          )}
         </div>
       </div>
 

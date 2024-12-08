@@ -9,7 +9,6 @@ import Milestone1 from "@/components/milestone1/Milestone1";
 import Milestone2 from "@/components/milestone2/Milestone2";
 import Milestone3 from "@/components/milestone3/Milestone3";
 import Milestone4 from "@/components/milestone4/Milestone4";
-import { logEventServer, PostHogEventType } from "@/lib/posthog";
 
 const milestones = [
   {
@@ -35,10 +34,6 @@ const milestones = [
 ];
 
 export default function Fiki() {
-  logEventServer({
-    eventType: PostHogEventType.PAGE_VIEWED,
-    path: "landing",
-  });
   return (
     <Accordion type="multiple" className="w-3/4 mb-4">
       {milestones.map((milestone) => (

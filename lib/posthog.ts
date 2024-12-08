@@ -1,4 +1,3 @@
-import PostHogClient from "@/app/posthog-server";
 import posthog from "posthog-js";
 
 export enum PostHogEventType {
@@ -26,18 +25,6 @@ type FormSubmitEvent = BaseEventProperties & {
 };
 
 export type PostHogEventProperties = PageViewedEvent | FormSubmitEvent;
-
-export const logEventServer = (properties: PostHogEventProperties) => {
-  try {
-    PostHogClient().capture({
-      distinctId: properties.userId || "anonymous",
-      event: properties.eventType,
-      properties,
-    });
-  } catch (error) {
-    console.error("Failed to log event:", error);
-  }
-};
 
 export const logEventClient = (properties: PostHogEventProperties) => {
   posthog.capture(properties.eventType, properties);

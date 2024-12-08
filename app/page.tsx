@@ -11,13 +11,8 @@ import {
   Utensils,
 } from "lucide-react";
 import NewsletterForm from "@/components/newsletter-form";
-import { logEventServer, PostHogEventType } from "@/lib/posthog";
 
 export default function Home() {
-  logEventServer({
-    eventType: PostHogEventType.PAGE_VIEWED,
-    path: "landing",
-  });
   return (
     <>
       <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 flex justify-center">

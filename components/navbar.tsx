@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChefHat, Menu, X } from "lucide-react";
+import { ChefHat, X } from "lucide-react";
 import { FaHamburger } from "react-icons/fa";
 
 export default function Navbar() {

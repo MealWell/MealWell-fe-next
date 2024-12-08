@@ -17,17 +17,22 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import ResponsiveCarouselControls from "@/components/ui/responsive-carousel-controls";
+import Image from "next/image";
 
 const flows = [
   {
-    src: "user-flows/user_flow_new_subscription.jpg",
+    src: "/user-flows/user_flow_new_subscription.jpg",
     alt: "New subscription user flow",
     description: "User flow pentru crearea unui nou abonament.",
+    width: 1061,
+    height: 228,
   },
   {
-    src: "user-flows/user_flow_manage_active_subscriptions.jpg",
+    src: "/user-flows/user_flow_manage_active_subscriptions.jpg",
     alt: "Manage active subscriptions user flow",
     description: "User flow pentru gestionarea abonamentelor active.",
+    width: 892,
+    height: 357,
   },
 ];
 
@@ -67,10 +72,12 @@ const UserFlowCarousel = () => {
                   <DialogTrigger asChild>
                     <Card className="cursor-pointer">
                       <CardContent className="flex aspect-square items-center justify-center p-6">
-                        <img
+                        <Image
                           src={flow.src}
                           alt={flow.alt}
                           className="object-contain w-full h-full"
+                          width={flow.width}
+                          height={flow.height}
                         />
                       </CardContent>
                     </Card>
@@ -81,10 +88,12 @@ const UserFlowCarousel = () => {
                       Flow
                     </DialogDescription>
                     <div className={"max-w-[90vw] max-h-[90vh] p-0"}>
-                      <img
+                      <Image
                         src={flow.src}
                         alt={flow.alt}
                         className="object-contain w-full h-full"
+                        width={flow.width}
+                        height={flow.height}
                       />
                     </div>
                   </DialogContent>

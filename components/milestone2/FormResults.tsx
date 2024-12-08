@@ -37,11 +37,11 @@ export default function FormResults() {
                 className="flex xl:h-[32rem] items-center justify-center w-full xl:basis-1/2"
               >
                 <Image
-                  width={1146}
-                  height={634}
                   src={result}
                   alt={`result-Q${index + 1}`}
                   className="h-full w-full object-contain"
+                  width={1146}
+                  height={634}
                 />
               </CarouselItem>
             ))}

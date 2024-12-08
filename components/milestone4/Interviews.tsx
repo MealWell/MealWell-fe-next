@@ -9,8 +9,8 @@ const Interviews = () => {
         <TypographyP>
           Echipa noastră a realizat interviuri cu potențiali clienți in cadrul
           milestone-ului 2. Aceste interviuri pot fi vizualizate accesând
-          acordionul cu titlul "Milestons 2" in secțiunea "Interviuri cu
-          clienți".
+          acordionul cu titlul &#x22;Milestone 2&#x22; in secțiunea
+          &#x22;Interviuri cu clien&#x21B;i&#x22;.
         </TypographyP>
       </div>
     </div>

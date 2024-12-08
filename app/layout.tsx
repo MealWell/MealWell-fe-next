@@ -3,6 +3,7 @@ import "./globals.css";
 import { inter } from "@/app/fonts/inter";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { CSPostHogProvider } from "@/app/posthog-provider";
 
 export const metadata: Metadata = {
   title: {
@@ -26,13 +27,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
-      </body>
+      <CSPostHogProvider>
+        <body className={`${inter.className} antialiased`}>
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }

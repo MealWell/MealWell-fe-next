@@ -21,7 +21,7 @@ const membersInfo: MemberInfo[] = [
     role: "CTO",
     description:
       "Eduardo Patrasc este CTO-ul echipei, cu 3 ani de experiență la Deutsche Bank, unde a lucrat ca Backend Developer și Observability Engineer. Eduardo se ocupă de arhitectura tehnică și optimizarea performanței, asigurând stabilitatea și eficiența infrastructurii software.",
-    img: "./members/edi.jpeg",
+    img: "./members/edi.jpg",
   },
   {
     name: "Dionisie Rusu",

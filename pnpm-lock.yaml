@@ -104,6 +104,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      embla-carousel:
+        specifier: ^8.5.1
+        version: 8.5.1
       embla-carousel-react:
         specifier: ^8.5.1
         version: 8.5.1(react@19.0.0)

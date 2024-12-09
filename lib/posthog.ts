@@ -3,6 +3,7 @@ import posthog from "posthog-js";
 export enum PostHogEventType {
   PAGE_VIEWED = "Page Viewed",
   SUBMIT_FORM = "Submit form",
+  CLICKED_BUTTON = "Button clicked",
 }
 
 type BaseEventProperties = {
@@ -24,7 +25,12 @@ type FormSubmitEvent = BaseEventProperties & {
   submitStatus?: "success" | "error";
 };
 
-export type PostHogEventProperties = PageViewedEvent | FormSubmitEvent;
+type ClickedButtonEvent = BaseEventProperties & {
+  eventType: PostHogEventType.CLICKED_BUTTON;
+  buttonName: string;
+}
+
+export type PostHogEventProperties = PageViewedEvent | FormSubmitEvent | ClickedButtonEvent;
 
 export const logEventClient = (properties: PostHogEventProperties) => {
   posthog.capture(properties.eventType, properties);

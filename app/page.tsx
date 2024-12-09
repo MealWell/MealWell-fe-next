@@ -11,6 +11,7 @@ import {
   Utensils,
 } from "lucide-react";
 import NewsletterForm from "@/components/newsletter-form";
+import ScrollToSubscribe from "@/components/scroll-to-subscribe";
 
 export default function Home() {
   return (
@@ -27,7 +28,7 @@ export default function Home() {
                 chef and nutritionist, just a click away.
               </p>
             </div>
-            <div className="space-x-4">
+            <div className="space-x-4 hidden">
               <Button size="lg" disabled={true}>
                 Get Started
               </Button>
@@ -35,6 +36,7 @@ export default function Home() {
                 Learn More
               </Button>
             </div>
+            <ScrollToSubscribe />
           </div>
         </div>
       </section>
@@ -191,7 +193,7 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
-          <div className="mt-10 text-center">
+          <div className="mt-10 text-center hidden">
             <Button disabled={true}>
               View All Plans
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -254,7 +256,7 @@ export default function Home() {
                 your fingertips.
               </p>
             </div>
-            <div className="space-x-4">
+            <div className="space-x-4 hidden">
               <Button size="lg" disabled={true}>
                 Get Started Now
               </Button>
@@ -262,7 +264,10 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="w-full py-12 md:py-24 lg:py-32 flex justify-center">
+      <section
+        className="w-full py-12 md:py-24 lg:py-32 flex justify-center"
+        id={"newsletter-form"}
+      >
         <div className="container px-4 md:px-6">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
             Subscribe to Our Newsletter

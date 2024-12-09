@@ -10,6 +10,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
 import { NewsletterFormValues, newsletterSchema } from "@/const/newsletter";
 import { logEventClient, PostHogEventType } from "@/lib/posthog";
+import { Loader2 } from "lucide-react";
+import { FIRST_NAME_MAX, LAST_NAME_MAX, MESSAGE_MAX } from "@/const/limits";
 
 export default function NewsletterForm() {
   const [serverResponse, setServerResponse] = useState<{
@@ -17,12 +19,18 @@ export default function NewsletterForm() {
     success: boolean;
   } | null>(null);
 
-  const { reset, register, handleSubmit, formState } =
+  const { reset, register, handleSubmit, formState, watch } =
     useForm<NewsletterFormValues>({
       resolver: zodResolver(newsletterSchema),
     });
 
   const errors = formState.errors;
+
+  console.log(errors);
+
+  const firstNameValue = watch("firstName") || "";
+  const lastNameValue = watch("lastName") || "";
+  const messageValue = watch("message") || "";
 
   const onSubmit = async (data: NewsletterFormValues) => {
     try {
@@ -69,6 +77,9 @@ export default function NewsletterForm() {
         <div>
           <Label htmlFor="firstName">First Name</Label>
           <Input id="firstName" {...register("firstName")} />
+          <p className="text-xs text-gray-500">
+            {`${firstNameValue.length} / ${FIRST_NAME_MAX} characters`}
+          </p>
           {errors.firstName && (
             <p className="text-sm text-red-500">{errors.firstName.message}</p>
           )}
@@ -76,6 +87,9 @@ export default function NewsletterForm() {
         <div>
           <Label htmlFor="lastName">Last Name</Label>
           <Input id="lastName" {...register("lastName")} />
+          <p className="text-xs text-gray-500">
+            {`${lastNameValue.length} / ${LAST_NAME_MAX} characters`}
+          </p>
           {errors.lastName && (
             <p className="text-sm text-red-500">{errors.lastName.message}</p>
           )}
@@ -91,12 +105,23 @@ export default function NewsletterForm() {
       <div>
         <Label htmlFor="message">Message (Optional)</Label>
         <Textarea id="message" {...register("message")} />
+        <p className="text-xs text-gray-500">
+          {`${messageValue.length} / ${MESSAGE_MAX} characters`}
+        </p>
+        {errors.message && (
+          <p className="text-sm text-red-500">{errors.message.message}</p>
+        )}
       </div>
       <Button
         type="submit"
         className="w-full"
         disabled={formState.isSubmitting}
       >
+        {formState.isSubmitting && (
+          <>
+            <Loader2 className="animate-spin" />{" "}
+          </>
+        )}
         Subscribe
       </Button>
       {serverResponse && (

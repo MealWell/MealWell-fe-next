@@ -9,6 +9,7 @@ import Milestone1 from "@/components/milestone1/Milestone1";
 import Milestone2 from "@/components/milestone2/Milestone2";
 import Milestone3 from "@/components/milestone3/Milestone3";
 import Milestone4 from "@/components/milestone4/Milestone4";
+import Milestone5 from "@/components/milestone5/milestone5";
 
 const milestones = [
   {
@@ -30,6 +31,11 @@ const milestones = [
     id: "m4",
     title: "Milestone 4",
     content: Milestone4,
+  },
+  {
+    id: "m5",
+    title: "Milestone 5",
+    content: Milestone5,
   },
 ];
 

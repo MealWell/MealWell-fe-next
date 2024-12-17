@@ -1,4 +1,5 @@
 import Competitors from "./competitors";
+import PotentialMarketShare from "./PotentialMarketShare";
 import TargetMarketSize from "./targetMarketSize";
 
 const Milestone6 = () => {
@@ -6,6 +7,7 @@ const Milestone6 = () => {
     <div className="space-y-6">
       <TargetMarketSize />
       <Competitors />
+      <PotentialMarketShare />
     </div>
   );
 };

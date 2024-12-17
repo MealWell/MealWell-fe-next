@@ -1,4 +1,5 @@
 import Competitors from "./competitors";
+import MarketValueAndShare from "./MarketValueAndShare";
 import PotentialMarketShare from "./PotentialMarketShare";
 import TargetMarketSize from "./targetMarketSize";
 
@@ -8,6 +9,7 @@ const Milestone6 = () => {
       <TargetMarketSize />
       <Competitors />
       <PotentialMarketShare />
+      <MarketValueAndShare />
     </div>
   );
 };

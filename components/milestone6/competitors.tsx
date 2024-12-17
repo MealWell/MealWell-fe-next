@@ -32,8 +32,8 @@ const Competitors = () => {
           personalizate.
         </li>
         <li>
-          <strong>Freshful by eMAG:</strong>
-          Soluții de livrare rapidă pentru produse alimentare sănătoase.
+          <strong>Freshful by eMAG:</strong> Soluții de livrare rapidă pentru
+          produse alimentare sănătoase.
         </li>
         <li>
           <strong>Edenia:</strong> Gama de mese gata preparate,
@@ -50,7 +50,7 @@ const Competitors = () => {
       <TypographyP className="font-bold text-lg">
         Cota de piață pentru cei mai mari competitori:
       </TypographyP>
-      <div className="h-[20rem]">
+      <div className={"items-center justify-center flex"}>
         <CompetitorsPieChart />
       </div>
     </div>

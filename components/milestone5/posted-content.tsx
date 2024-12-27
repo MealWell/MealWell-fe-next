@@ -133,7 +133,7 @@ const PostedContentCarousel = () => {
           <ResponsiveCarouselControls />
         </Carousel>
       </div>
-      <div className="mt-4 text-center p-4 bg-gray-100 rounded-md">
+      <div className="mt-4 text-center p-4 bg-accent rounded-md">
         <p>{postedContent[currentIndex].description}</p>
       </div>
     </div>

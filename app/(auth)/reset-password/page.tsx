@@ -37,54 +37,56 @@ export default function ResetPassword() {
     router.push("/sign-in");
   }
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)]">
-      <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle>Reset password</CardTitle>
-          <CardDescription>
-            Enter new password and confirm it to reset your password
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="grid w-full items-center gap-2">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="email">New password</Label>
-                <PasswordInput
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="password"
-                  placeholder="Password"
-                />
+    <div className="w-full">
+      <div className="flex items-center flex-col justify-center w-full">
+        <Card className="w-[350px]">
+          <CardHeader>
+            <CardTitle>Reset password</CardTitle>
+            <CardDescription>
+              Enter new password and confirm it to reset your password
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <div className="grid w-full items-center gap-2">
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="email">New password</Label>
+                  <PasswordInput
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="password"
+                    placeholder="Password"
+                  />
+                </div>
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="email">Confirm password</Label>
+                  <PasswordInput
+                    id="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    autoComplete="password"
+                    placeholder="Password"
+                  />
+                </div>
               </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="email">Confirm password</Label>
-                <PasswordInput
-                  id="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  autoComplete="password"
-                  placeholder="Password"
-                />
-              </div>
-            </div>
-            {error && (
-              <Alert variant="destructive" className="mt-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            <Button
-              className="w-full mt-4"
-              type="submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Resetting..." : "Reset password"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              {error && (
+                <Alert variant="destructive" className="mt-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+              <Button
+                className="w-full mt-4"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Resetting..." : "Reset password"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

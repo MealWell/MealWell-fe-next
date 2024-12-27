@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import UserCard from "./user-card";
 
-export default async function DashboardPage() {
+export default async function ProfilePage() {
   const [session, activeSessions] = await Promise.all([
     auth.api.getSession({
       headers: await headers(),

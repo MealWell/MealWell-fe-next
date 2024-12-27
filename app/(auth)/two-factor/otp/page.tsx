@@ -42,67 +42,71 @@ export default function Component() {
       setMessage("OTP validated successfully");
       setIsError(false);
       setIsValidated(true);
-      router.push("/");
+      setTimeout(() => {
+        router.push("/profile");
+      }, 1000);
     } else {
       setIsError(true);
       setMessage("Invalid OTP");
     }
   };
   return (
-    <main className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)]">
-      <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle>Two-Factor Authentication</CardTitle>
-          <CardDescription>
-            Verify your identity with a one-time password
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid w-full items-center gap-4">
-            {!isOtpSent ? (
-              <Button onClick={requestOTP} className="w-full">
-                <Mail className="mr-2 h-4 w-4" /> Send OTP to Email
-              </Button>
-            ) : (
-              <>
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="otp">One-Time Password</Label>
-                  <Label className="py-2">
-                    Check your email at {userEmail} for the OTP
-                  </Label>
-                  <Input
-                    id="otp"
-                    placeholder="Enter 6-digit OTP"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    maxLength={6}
-                  />
-                </div>
-                <Button
-                  onClick={validateOTP}
-                  disabled={otp.length !== 6 || isValidated}
-                >
-                  Validate OTP
+    <div className="w-full">
+      <div className="flex items-center flex-col justify-center w-full">
+        <Card className="w-[350px]">
+          <CardHeader>
+            <CardTitle>Two-Factor Authentication</CardTitle>
+            <CardDescription>
+              Verify your identity with a one-time password
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid w-full items-center gap-4">
+              {!isOtpSent ? (
+                <Button onClick={requestOTP} className="w-full">
+                  <Mail className="mr-2 h-4 w-4" /> Send OTP to Email
                 </Button>
-              </>
-            )}
-          </div>
-          {message && (
-            <div
-              className={`flex items-center gap-2 mt-4 ${
-                isError ? "text-red-500" : "text-primary"
-              }`}
-            >
-              {isError ? (
-                <AlertCircle className="h-4 w-4" />
               ) : (
-                <CheckCircle2 className="h-4 w-4" />
+                <>
+                  <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="otp">One-Time Password</Label>
+                    <Label className="py-2">
+                      Check your email at {userEmail} for the OTP
+                    </Label>
+                    <Input
+                      id="otp"
+                      placeholder="Enter 6-digit OTP"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      maxLength={6}
+                    />
+                  </div>
+                  <Button
+                    onClick={validateOTP}
+                    disabled={otp.length !== 6 || isValidated}
+                  >
+                    Validate OTP
+                  </Button>
+                </>
               )}
-              <p className="text-sm">{message}</p>
             </div>
-          )}
-        </CardContent>
-      </Card>
-    </main>
+            {message && (
+              <div
+                className={`flex items-center gap-2 mt-4 ${
+                  isError ? "text-red-500" : "text-primary"
+                }`}
+              >
+                {isError ? (
+                  <AlertCircle className="h-4 w-4" />
+                ) : (
+                  <CheckCircle2 className="h-4 w-4" />
+                )}
+                <p className="text-sm">{message}</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }

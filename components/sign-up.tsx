@@ -44,13 +44,13 @@ export default function SignUp({ onSignIn }: { onSignIn: () => void }) {
       email: data.email,
       password: data.password,
       name: `${data.firstName} ${data.lastName}`,
-      callbackURL: "/dashboard",
+      callbackURL: "/profile",
       fetchOptions: {
         onError: (ctx) => {
           toast.error(ctx.error.message);
         },
         onSuccess: async () => {
-          router.push("/dashboard");
+          router.push("/profile");
         },
       },
     });
@@ -172,7 +172,7 @@ export default function SignUp({ onSignIn }: { onSignIn: () => void }) {
                   onClick={async () => {
                     await signIn.social({
                       provider: "google",
-                      callbackURL: "/dashboard",
+                      callbackURL: "/profile",
                     });
                   }}
                 >
@@ -207,7 +207,7 @@ export default function SignUp({ onSignIn }: { onSignIn: () => void }) {
                   onClick={async () => {
                     await signIn.social({
                       provider: "facebook",
-                      callbackURL: "/dashboard",
+                      callbackURL: "/profile",
                     });
                   }}
                 >

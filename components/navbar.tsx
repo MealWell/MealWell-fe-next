@@ -33,7 +33,7 @@ export default function Navbar() {
     !session.data &&
       !session.isPending && { href: "/sign-in", label: "Sign In" },
     !!session.data &&
-      !session.isPending && { href: "/dashboard", label: "Dashboard" },
+      !session.isPending && { href: "/profile", label: "Profile" },
   ].filter((item): item is NavItem => Boolean(item));
 
   return (

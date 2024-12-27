@@ -2,6 +2,12 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import UserCard from "./user-card";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile",
+  description: "MealWell user profile",
+};
 
 export default async function ProfilePage() {
   const [session, activeSessions] = await Promise.all([

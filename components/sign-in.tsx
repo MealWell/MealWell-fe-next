@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Loader2, Utensils } from "lucide-react";
+import { Key, Loader2, Utensils } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -25,8 +25,10 @@ import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PasswordInput } from "@/components/ui/password-input";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SignIn({ onSignUp }: { onSignUp: () => void }) {
+  const router = useRouter();
   const form = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -202,6 +204,25 @@ export default function SignIn({ onSignUp }: { onSignUp: () => void }) {
                   </svg>
                 </Button>
               </div>
+              <Button
+                variant="outline"
+                className="gap-2 w-full"
+                onClick={async () => {
+                  await signIn.passkey({
+                    fetchOptions: {
+                      onSuccess() {
+                        router.push("/dashboard");
+                      },
+                      onError(context) {
+                        toast.error(context.error.message);
+                      },
+                    },
+                  });
+                }}
+              >
+                <Key size={16} />
+                Sign-in with Passkey
+              </Button>
               <div className="text-sm text-center text-gray-500">
                 Don&#39;t have an account?{" "}
                 <Button variant="link" onClick={onSignUp} className="p-0">

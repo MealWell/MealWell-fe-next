@@ -206,6 +206,7 @@ export default function SignIn({ onSignUp }: { onSignUp: () => void }) {
               </div>
               <Button
                 variant="outline"
+                type={"button"}
                 className="gap-2 w-full"
                 onClick={async () => {
                   await signIn.passkey({

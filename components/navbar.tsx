@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChefHat, X } from "lucide-react";
 import { FaHamburger } from "react-icons/fa";
 import posthog from "posthog-js";
+import { ThemeToggle } from "@/components/theme-toggle";
 interface NavItem {
   href: string;
   label: string;
@@ -32,10 +33,12 @@ export default function Navbar() {
     <>
       {/* Warning Banner */}
       <div className="bg-accent-foreground text-white text-center py-2 px-4 sm:px-6 lg:px-8">
-        <p className="text-sm font-medium">MealWell is under development.</p>
+        <p className="text-sm font-medium text-accent">
+          MealWell is under development.
+        </p>
       </div>
-      <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 border-b">
+      <header className="sticky top-0 z-50 w-full border-b bg-accent/80 backdrop-blur-sm">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Link className="flex items-center justify-center" href="/">
               <ChefHat className="h-6 w-6 mr-2" />
@@ -54,6 +57,9 @@ export default function Navbar() {
                 </Link>
               ))}
             </nav>
+            <div className="z-50 flex items-center">
+              <ThemeToggle />
+            </div>
 
             {/* Mobile Menu Toggle */}
             {navItems.length > 0 && (

@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import NewsletterForm from "@/components/newsletter-form";
 import ScrollToSubscribe from "@/components/scroll-to-subscribe";
+import { SignInButton, SignInFallback } from "@/components/sign-in-btn";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -37,6 +39,9 @@ export default function Home() {
               </Button>
             </div>
             <ScrollToSubscribe />
+            <Suspense fallback={<SignInFallback />}>
+              <SignInButton />
+            </Suspense>
           </div>
         </div>
       </section>

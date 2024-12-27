@@ -16,11 +16,13 @@ export default async function DashboardPage() {
     throw redirect("/sign-in");
   });
   return (
-    <div className="flex gap-4 flex-col">
-      <UserCard
-        session={JSON.parse(JSON.stringify(session))}
-        activeSessions={JSON.parse(JSON.stringify(activeSessions))}
-      />
+    <div className="flex w-full justify-center">
+      <div className={"container"}>
+        <UserCard
+          session={JSON.parse(JSON.stringify(session))}
+          activeSessions={JSON.parse(JSON.stringify(activeSessions))}
+        />
+      </div>
     </div>
   );
 }

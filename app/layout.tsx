@@ -32,11 +32,11 @@ export default function RootLayout({
       <CSPostHogProvider>
         <body className={`${inter.className} antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="light">
-            <div className="flex flex-col min-h-screen">
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
+            <Navbar />
+            <div className="min-h-screen w-full flex justify-center">
+              <main className={"mt-20 w-full"}>{children}</main>
             </div>
+            <Footer />
             <Toaster richColors closeButton />
           </ThemeProvider>
         </body>

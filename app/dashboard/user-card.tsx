@@ -143,15 +143,19 @@ export default function UserCard(props: {
             .map((session) => {
               return (
                 <div key={session.id}>
-                  <div className="flex items-center gap-2 text-sm  text-black font-medium dark:text-white">
+                  <div className="flex items-center gap-2 text-sm font-medium">
                     {new UAParser(session.userAgent || "").getDevice().type ===
                     "mobile" ? (
                       <TabletSmartphone size={16} />
                     ) : (
                       <Laptop size={16} />
                     )}
-                    {new UAParser(session.userAgent || "").getOS().name},{" "}
-                    {new UAParser(session.userAgent || "").getBrowser().name}
+                    <span>
+                      {new UAParser(session.userAgent || "").getOS().name},{" "}
+                    </span>
+                    <span>
+                      {new UAParser(session.userAgent || "").getBrowser().name}
+                    </span>
                     <button
                       className="text-red-500 opacity-80  cursor-pointer text-xs border-muted-foreground border-red-600  underline "
                       onClick={async () => {
@@ -192,7 +196,7 @@ export default function UserCard(props: {
           </div>
           <div className="flex flex-col gap-2">
             <p className="text-sm">Two Factor</p>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               {!!session?.user.twoFactorEnabled && (
                 <Dialog>
                   <DialogTrigger asChild>
@@ -391,35 +395,37 @@ export default function UserCard(props: {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="gap-2 justify-between items-center">
-        <ChangePassword />
-        <Button
-          className="gap-2 z-10"
-          variant="secondary"
-          onClick={async () => {
-            setIsSignOut(true);
-            await signOut({
-              fetchOptions: {
-                onSuccess() {
-                  router.push("/");
+      <CardFooter>
+        <div className="flex gap-2 justify-between items-center flex-wrap">
+          <ChangePassword />
+          <Button
+            className="gap-2 z-10"
+            variant="secondary"
+            onClick={async () => {
+              setIsSignOut(true);
+              await signOut({
+                fetchOptions: {
+                  onSuccess() {
+                    router.push("/");
+                  },
                 },
-              },
-            });
-            setIsSignOut(false);
-          }}
-          disabled={isSignOut}
-        >
-          <span className="text-sm">
-            {isSignOut ? (
-              <Loader2 size={15} className="animate-spin" />
-            ) : (
-              <div className="flex items-center gap-2">
-                <LogOut size={16} />
-                Sign Out
-              </div>
-            )}
-          </span>
-        </Button>
+              });
+              setIsSignOut(false);
+            }}
+            disabled={isSignOut}
+          >
+            <span className="text-sm">
+              {isSignOut ? (
+                <Loader2 size={15} className="animate-spin" />
+              ) : (
+                <div className="flex items-center gap-2">
+                  <LogOut size={16} />
+                  Sign Out
+                </div>
+              )}
+            </span>
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );

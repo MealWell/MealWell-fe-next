@@ -396,7 +396,7 @@ export default function UserCard(props: {
         </div>
       </CardContent>
       <CardFooter>
-        <div className="flex gap-2 justify-between items-center flex-wrap">
+        <div className="flex gap-2 justify-between items-center flex-wrap w-full">
           <ChangePassword />
           <Button
             className="gap-2 z-10"

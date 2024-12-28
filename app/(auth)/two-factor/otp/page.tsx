@@ -1,5 +1,14 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,47 +18,54 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { client } from "@/lib/auth-client";
 import { AlertCircle, CheckCircle2, Mail } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { OtpFormValues, otpSchema } from "@/const/schemas";
+import { client } from "@/lib/auth-client";
 
-export default function Component() {
-  const [otp, setOtp] = useState("");
+export default function TwoFactorAuth() {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [isValidated, setIsValidated] = useState(false);
 
-  // In a real app, this email would come from your authentication context
-  const userEmail = "user@example.com";
+  const router = useRouter();
+
+  const form = useForm<OtpFormValues>({
+    resolver: zodResolver(otpSchema),
+    defaultValues: {
+      otp: "",
+    },
+  });
 
   const requestOTP = async () => {
     await client.twoFactor.sendOtp();
-    // In a real app, this would call your backend API to send the OTP
     setMessage("OTP sent to your email");
     setIsError(false);
     setIsOtpSent(true);
   };
-  const router = useRouter();
 
-  const validateOTP = async () => {
-    const res = await client.twoFactor.verifyOtp({
-      code: otp,
-    });
-    if (res.data) {
-      setMessage("OTP validated successfully");
-      setIsError(false);
-      setIsValidated(true);
-      setTimeout(() => {
-        router.push("/profile");
-      }, 1000);
-    } else {
-      setIsError(true);
-      setMessage("Invalid OTP");
+  const validateOTP = async (data: OtpFormValues) => {
+    try {
+      const res = await client.twoFactor.verifyOtp({ code: data.otp });
+      if (res.data) {
+        setMessage("OTP validated successfully");
+        setIsError(false);
+        setIsValidated(true);
+        setTimeout(() => {
+          router.push("/profile");
+        }, 1000);
+      } else {
+        form.setError("otp", { message: "Invalid OTP" });
+      }
+    } catch (err) {
+      console.error(err);
+      form.setError("otp", { message: "An error occurred. Please try again." });
     }
   };
+
   return (
     <div className="w-full">
       <div className="flex items-center flex-col justify-center w-full">
@@ -61,39 +77,54 @@ export default function Component() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid w-full items-center gap-4">
-              {!isOtpSent ? (
-                <Button onClick={requestOTP} className="w-full">
-                  <Mail className="mr-2 h-4 w-4" /> Send OTP to Email
-                </Button>
-              ) : (
-                <>
-                  <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="otp">One-Time Password</Label>
-                    <Label className="py-2">
-                      Check your email at {userEmail} for the OTP
-                    </Label>
-                    <Input
-                      id="otp"
-                      placeholder="Enter 6-digit OTP"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      maxLength={6}
-                    />
-                  </div>
+            {!isOtpSent ? (
+              <Button onClick={requestOTP} className="w-full">
+                <Mail className="mr-2 h-4 w-4" /> Send OTP to Email
+              </Button>
+            ) : (
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(validateOTP)}>
+                  <FormField
+                    control={form.control}
+                    name="otp"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>One-Time Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="Enter 6-digit OTP"
+                            autoComplete="off"
+                            maxLength={6}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <p className="text-sm text-muted-foreground py-2">
+                    Check your email for the OTP
+                  </p>
                   <Button
-                    onClick={validateOTP}
-                    disabled={otp.length !== 6 || isValidated}
+                    type="submit"
+                    className="w-full mt-4"
+                    disabled={isValidated || form.formState.isSubmitSuccessful}
                   >
-                    Validate OTP
+                    {form.formState.isSubmitting
+                      ? "Validating..."
+                      : "Validate OTP"}
                   </Button>
-                </>
-              )}
-            </div>
+                </form>
+              </Form>
+            )}
             {message && (
               <div
                 className={`flex items-center gap-2 mt-4 ${
-                  isError ? "text-red-500" : "text-primary"
+                  isError
+                    ? "text-destructive"
+                    : form.formState.isSubmitSuccessful
+                      ? "text-success"
+                      : "text-primary"
                 }`}
               >
                 {isError ? (

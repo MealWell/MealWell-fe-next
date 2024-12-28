@@ -77,21 +77,25 @@ export default function NewsletterForm() {
         <div>
           <Label htmlFor="firstName">First Name</Label>
           <Input id="firstName" {...register("firstName")} />
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             {`${firstNameValue.length} / ${FIRST_NAME_MAX} characters`}
           </p>
           {errors.firstName && (
-            <p className="text-sm text-red-500">{errors.firstName.message}</p>
+            <p className="text-sm text-destructive">
+              {errors.firstName.message}
+            </p>
           )}
         </div>
         <div>
           <Label htmlFor="lastName">Last Name</Label>
           <Input id="lastName" {...register("lastName")} />
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             {`${lastNameValue.length} / ${LAST_NAME_MAX} characters`}
           </p>
           {errors.lastName && (
-            <p className="text-sm text-red-500">{errors.lastName.message}</p>
+            <p className="text-sm text-destructive">
+              {errors.lastName.message}
+            </p>
           )}
         </div>
       </div>
@@ -99,17 +103,17 @@ export default function NewsletterForm() {
         <Label htmlFor="email">Email</Label>
         <Input id="email" {...register("email")} />
         {errors.email && (
-          <p className="text-sm text-red-500">{errors.email.message}</p>
+          <p className="text-sm text-destructive">{errors.email.message}</p>
         )}
       </div>
       <div>
         <Label htmlFor="message">Message (Optional)</Label>
         <Textarea id="message" {...register("message")} />
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-muted-foreground">
           {`${messageValue.length} / ${MESSAGE_MAX} characters`}
         </p>
         {errors.message && (
-          <p className="text-sm text-red-500">{errors.message.message}</p>
+          <p className="text-sm destructive">{errors.message.message}</p>
         )}
       </div>
       <Button
@@ -126,9 +130,8 @@ export default function NewsletterForm() {
       </Button>
       {serverResponse && (
         <Alert
-          className={`mt-4 ${
-            serverResponse.success ? "bg-green-100" : "bg-red-100"
-          }`}
+          className={"mt-4"}
+          variant={serverResponse.success ? "success" : "destructive"}
         >
           <AlertDescription>{serverResponse.message}</AlertDescription>
         </Alert>

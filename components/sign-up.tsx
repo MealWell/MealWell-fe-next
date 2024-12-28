@@ -224,7 +224,7 @@ export default function SignUp({ onSignIn }: { onSignIn: () => void }) {
                   </svg>
                 </Button>
               </div>
-              <div className="text-sm text-center text-gray-500">
+              <div className="text-sm text-center text-muted-foreground">
                 Already have an account?{" "}
                 <Button variant="link" onClick={onSignIn} className="p-0">
                   Sign In

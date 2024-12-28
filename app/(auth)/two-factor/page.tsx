@@ -1,5 +1,14 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,41 +19,39 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { client } from "@/lib/auth-client";
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { client } from "@/lib/auth-client";
+import { TotpFormValues, totpSchema } from "@/const/schemas";
 
-export default function Component() {
-  const [totpCode, setTotpCode] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-
+export default function TotpVerification() {
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (totpCode.length !== 6 || !/^\d+$/.test(totpCode)) {
-      setError("TOTP code must be 6 digits");
-      return;
-    }
-    client.twoFactor
-      .verifyTotp({
-        code: totpCode,
-      })
-      .then((res) => {
-        if (res.data?.token) {
-          setSuccess(true);
-          setError("");
-          setTimeout(() => {
-            router.push("/profile");
-          }, 1000);
-        } else {
-          setError("Invalid TOTP code");
-        }
+  const form = useForm<TotpFormValues>({
+    resolver: zodResolver(totpSchema),
+    defaultValues: {
+      totpCode: "",
+    },
+  });
+
+  const onSubmit = async (data: TotpFormValues) => {
+    try {
+      const res = await client.twoFactor.verifyTotp({ code: data.totpCode });
+      if (res.data?.token) {
+        setTimeout(() => {
+          router.push("/profile");
+        }, 1000);
+      } else {
+        form.setError("totpCode", { message: "Invalid TOTP code" });
+      }
+    } catch (error) {
+      console.error(error);
+      form.setError("totpCode", {
+        message: "An error occurred. Please try again.",
       });
+    }
   };
 
   return (
@@ -58,35 +65,38 @@ export default function Component() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {!success ? (
-              <form onSubmit={handleSubmit}>
-                <div className="space-y-2">
-                  <Label htmlFor="totp">TOTP Code</Label>
-                  <Input
-                    id="totp"
-                    type="text"
-                    inputMode="numeric"
-                    pattern="\d{6}"
-                    maxLength={6}
-                    value={totpCode}
-                    onChange={(e) => setTotpCode(e.target.value)}
-                    placeholder="Enter 6-digit code"
-                    required
+            {!form.formState.isSubmitSuccessful ? (
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <FormField
+                    control={form.control}
+                    name="totpCode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>TOTP Code</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="Enter 6-digit code"
+                            autoComplete="off"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                {error && (
-                  <div className="flex items-center mt-2 text-red-500">
-                    <AlertCircle className="w-4 h-4 mr-2" />
-                    <span className="text-sm">{error}</span>
-                  </div>
-                )}
-                <Button type="submit" className="w-full mt-4">
-                  Verify
-                </Button>
-              </form>
+                  <Button
+                    type="submit"
+                    className="w-full mt-4"
+                    disabled={form.formState.isSubmitSuccessful}
+                  >
+                    {form.formState.isSubmitting ? "Verifying..." : "Verify"}
+                  </Button>
+                </form>
+              </Form>
             ) : (
               <div className="flex flex-col items-center justify-center space-y-2">
-                <CheckCircle2 className="w-12 h-12 text-green-500" />
+                <CheckCircle2 className="w-12 h-12 text-success" />
                 <p className="text-lg font-semibold">Verification Successful</p>
               </div>
             )}

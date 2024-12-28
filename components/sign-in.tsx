@@ -224,7 +224,7 @@ export default function SignIn({ onSignUp }: { onSignUp: () => void }) {
                 <Key size={16} />
                 Sign-in with Passkey
               </Button>
-              <div className="text-sm text-center text-gray-500">
+              <div className="text-sm text-center text-muted-foreground">
                 Don&#39;t have an account?{" "}
                 <Button variant="link" onClick={onSignUp} className="p-0">
                   Sign Up

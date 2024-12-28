@@ -1,5 +1,14 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,34 +20,38 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { client } from "@/lib/auth-client";
-import { AlertCircle, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { toast } from "sonner";
+import {
+  ForgotPasswordFormValues,
+  forgotPasswordSchema,
+} from "@/const/schemas";
 
-export default function Component() {
-  const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function ForgotPassword() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError("");
+  const form = useForm<ForgotPasswordFormValues>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
 
+  const onSubmit = async (data: ForgotPasswordFormValues) => {
     try {
       await client.forgetPassword({
-        email,
+        email: data.email,
         redirectTo: "/reset-password",
       });
       setIsSubmitted(true);
+      toast.success("Reset link sent to your email!");
     } catch (err) {
       console.error(err);
-      setError("An error occurred. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+      toast.error("An error occurred. Please try again.");
     }
   };
 
@@ -87,34 +100,38 @@ export default function Component() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit}>
-              <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="grid w-full items-center gap-4">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your email"
+                            {...field}
+                            autoComplete="email"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
-              </div>
-              {error && (
-                <Alert variant="destructive" className="mt-4">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              <Button
-                className="w-full mt-4"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Sending..." : "Send reset link"}
-              </Button>
-            </form>
+                <Button
+                  className="w-full mt-4"
+                  type="submit"
+                  disabled={form.formState.isSubmitting}
+                >
+                  {form.formState.isSubmitting
+                    ? "Sending..."
+                    : "Send reset link"}
+                </Button>
+              </form>
+            </Form>
           </CardContent>
           <CardFooter className="flex justify-center">
             <Link href={"/sign-in"}>

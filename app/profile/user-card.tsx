@@ -157,7 +157,7 @@ export default function UserCard(props: {
                       {new UAParser(session.userAgent || "").getBrowser().name}
                     </span>
                     <button
-                      className="text-red-500 opacity-80  cursor-pointer text-xs border-muted-foreground border-red-600  underline "
+                      className="text-destructive cursor-pointer text-xs underline"
                       onClick={async () => {
                         setIsTerminating(session.id);
                         const res = await client.revokeSession({
@@ -467,7 +467,7 @@ function ChangePassword() {
             id="current-password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
-            autoComplete="new-password"
+            autoComplete="current-password"
             placeholder="Password"
           />
           <Label htmlFor="new-password">New Password</Label>
@@ -747,7 +747,7 @@ function ListPasskeys() {
                         ) : (
                           <Trash
                             size={15}
-                            className="cursor-pointer text-red-600"
+                            className="cursor-pointer text-destructive"
                           />
                         )}
                       </button>

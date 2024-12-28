@@ -1,6 +1,19 @@
 "use client";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { PasswordInput } from "@/components/ui/password-input";
+import { client } from "@/lib/auth-client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,33 +22,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { PasswordInput } from "@/components/ui/password-input";
-import { client } from "@/lib/auth-client";
-import { AlertCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
+import { ResetPasswordFormValues, resetPasswordSchema } from "@/const/schemas";
 
 export default function ResetPassword() {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError("");
-    const res = await client.resetPassword({
-      newPassword: password,
-    });
-    if (res.error) {
-      toast.error(res.error.message);
+  const form = useForm<ResetPasswordFormValues>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const onSubmit = async (data: ResetPasswordFormValues) => {
+    try {
+      const res = await client.resetPassword({
+        newPassword: data.password,
+      });
+
+      if (res.error) {
+        toast.error(res.error.message);
+        return;
+      }
+
+      toast.success("Password reset successfully!");
+      router.push("/sign-in");
+    } catch (error) {
+      console.error(error);
+      toast.error("An unexpected error occurred.");
     }
-    setIsSubmitting(false);
-    router.push("/sign-in");
-  }
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center flex-col justify-center w-full">
@@ -47,43 +64,55 @@ export default function ResetPassword() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit}>
-              <div className="grid w-full items-center gap-2">
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="email">New password</Label>
-                  <PasswordInput
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="password"
-                    placeholder="Password"
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="grid w-full items-center gap-2">
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>New password</FormLabel>
+                        <FormControl>
+                          <PasswordInput
+                            placeholder="Password"
+                            {...field}
+                            autoComplete="new-password"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm password</FormLabel>
+                        <FormControl>
+                          <PasswordInput
+                            placeholder="Confirm Password"
+                            {...field}
+                            autoComplete={"new-password"}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="email">Confirm password</Label>
-                  <PasswordInput
-                    id="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    autoComplete="password"
-                    placeholder="Password"
-                  />
-                </div>
-              </div>
-              {error && (
-                <Alert variant="destructive" className="mt-4">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              <Button
-                className="w-full mt-4"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Resetting..." : "Reset password"}
-              </Button>
-            </form>
+                <Button
+                  className="w-full mt-4"
+                  type="submit"
+                  disabled={form.formState.isSubmitting}
+                >
+                  {form.formState.isSubmitting
+                    ? "Resetting..."
+                    : "Reset password"}
+                </Button>
+              </form>
+            </Form>
           </CardContent>
         </Card>
       </div>

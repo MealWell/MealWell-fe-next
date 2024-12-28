@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 import { CSPostHogProvider } from "@/app/posthog-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
+import QueryClientProviderWrapper from "@/components/QueryClientProviderWrapper";
 
 export const metadata: Metadata = {
   title: {
@@ -30,16 +31,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <CSPostHogProvider>
-        <body className={`${inter.className} antialiased`}>
-          <ThemeProvider attribute="class" defaultTheme="light">
-            <Navbar />
-            <div className="min-h-screen w-full flex justify-center">
-              <main className={"mt-20 w-full"}>{children}</main>
-            </div>
-            <Footer />
-            <Toaster richColors closeButton />
-          </ThemeProvider>
-        </body>
+        <QueryClientProviderWrapper>
+          <body className={`${inter.className} antialiased`}>
+            <ThemeProvider attribute="class" defaultTheme="light">
+              <Navbar />
+              <div className="min-h-screen w-full flex justify-center">
+                <main className={"mt-20 w-full"}>{children}</main>
+              </div>
+              <Footer />
+              <Toaster richColors closeButton />
+            </ThemeProvider>
+          </body>
+        </QueryClientProviderWrapper>
       </CSPostHogProvider>
     </html>
   );

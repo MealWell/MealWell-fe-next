@@ -28,12 +28,18 @@ export default function Navbar() {
 
   const session = useSession();
 
+  const isLogged = !!session?.data && !session.isPending;
+  const userRole = session?.data?.user.role;
+
   const navItems: NavItem[] = [
     fikiEnabled && { href: "/fiki", label: "Fiki" },
-    !session.data &&
-      !session.isPending && { href: "/sign-in", label: "Sign In" },
-    !!session.data &&
-      !session.isPending && { href: "/profile", label: "Profile" },
+    !isLogged && { href: "/sign-in", label: "Sign In" },
+    isLogged && { href: "/profile", label: "Profile" },
+    isLogged &&
+      userRole === "admin" && {
+        href: "/admin",
+        label: "Admin dashboard",
+      },
   ].filter((item): item is NavItem => Boolean(item));
 
   return (

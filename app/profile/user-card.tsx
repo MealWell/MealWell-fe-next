@@ -160,9 +160,20 @@ export default function UserCard(props: {
                       className="text-destructive cursor-pointer text-xs underline"
                       onClick={async () => {
                         setIsTerminating(session.id);
-                        const res = await client.revokeSession({
-                          token: session.token,
-                        });
+                        let res;
+                        if (session.id === props.session?.session.id) {
+                          res = await signOut({
+                            fetchOptions: {
+                              onSuccess() {
+                                router.push("/");
+                              },
+                            },
+                          });
+                        } else {
+                          res = await client.revokeSession({
+                            token: session.token,
+                          });
+                        }
 
                         if (res.error) {
                           toast.error(res.error.message);

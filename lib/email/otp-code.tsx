@@ -15,16 +15,16 @@ import {
 import { ChefHat } from "lucide-react";
 import * as React from "react";
 
-interface BetterAuthResetPasswordEmailProps {
+interface OtpCodeVerificationProps {
   username?: string;
-  resetLink?: string;
+  otpCode?: string;
 }
 
-export const ResetPasswordEmail = ({
+export const OtpCodeVerificationEmail = ({
   username = "there", // Default fallback
-  resetLink = "#", // Default fallback
-}: BetterAuthResetPasswordEmailProps) => {
-  const previewText = `Reset your MealWell password`;
+  otpCode = "", // Default fallback
+}: OtpCodeVerificationProps) => {
+  const previewText = `Verify your OTP code for MealWell`;
 
   return (
     <Html>
@@ -40,7 +40,7 @@ export const ResetPasswordEmail = ({
 
             {/* Heading */}
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
-              Reset your <strong>MealWell</strong> password
+              Verify your <strong>MealWell</strong> OTP code
             </Heading>
 
             {/* Greeting */}
@@ -50,28 +50,22 @@ export const ResetPasswordEmail = ({
 
             {/* Instructional Text */}
             <Text className="text-black text-[14px] leading-[24px]">
-              We received a request to reset your password for your MealWell
-              account. If you didn&#39;t make this request, you can safely
-              ignore this email.
+              You recently requested an OTP code for logging in or verifying
+              your identity. Please use the following code to complete your
+              action.
             </Text>
 
-            {/* Reset Button */}
+            {/* OTP Code Display */}
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Button
-                className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
-                href={resetLink}
-                aria-label="Reset your MealWell password"
-              >
-                Reset Password
-              </Button>
+              <Text className="text-black text-[18px] font-semibold">
+                Your OTP Code: <strong>{otpCode}</strong>
+              </Text>
             </Section>
 
             {/* Alternative Link */}
             <Text className="text-black text-[14px] leading-[24px]">
-              Or copy and paste this URL into your browser:{" "}
-              <Link href={resetLink} className="text-blue-600 no-underline">
-                {resetLink}
-              </Link>
+              If you didn&#39;t request an OTP, please ignore this email or
+              contact support if you have concerns.
             </Text>
 
             {/* Divider */}
@@ -79,8 +73,7 @@ export const ResetPasswordEmail = ({
 
             {/* Footer Text */}
             <Text className="text-[#666666] text-[12px] leading-[24px]">
-              If you didn&#39;t request a password reset, please ignore this
-              email or contact support if you have concerns.
+              This is a one-time password (OTP) and expires in a short period.
             </Text>
           </Container>
         </Body>
@@ -89,9 +82,7 @@ export const ResetPasswordEmail = ({
   );
 };
 
-export function reactResetPasswordEmail(
-  props: BetterAuthResetPasswordEmailProps,
-) {
+export function reactOtpCodeVerificationEmail(props: OtpCodeVerificationProps) {
   console.log(props);
-  return <ResetPasswordEmail {...props} />;
+  return <OtpCodeVerificationEmail {...props} />;
 }

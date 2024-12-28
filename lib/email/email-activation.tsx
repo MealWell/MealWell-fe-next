@@ -15,16 +15,16 @@ import {
 import { ChefHat } from "lucide-react";
 import * as React from "react";
 
-interface BetterAuthResetPasswordEmailProps {
+interface EmailVerificationProps {
   username?: string;
-  resetLink?: string;
+  verificationUrl?: string;
 }
 
-export const ResetPasswordEmail = ({
+export const EmailVerificationEmail = ({
   username = "there", // Default fallback
-  resetLink = "#", // Default fallback
-}: BetterAuthResetPasswordEmailProps) => {
-  const previewText = `Reset your MealWell password`;
+  verificationUrl = "#", // Default fallback
+}: EmailVerificationProps) => {
+  const previewText = `Verify your MealWell email address`;
 
   return (
     <Html>
@@ -40,7 +40,7 @@ export const ResetPasswordEmail = ({
 
             {/* Heading */}
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
-              Reset your <strong>MealWell</strong> password
+              Verify your <strong>MealWell</strong> email address
             </Heading>
 
             {/* Greeting */}
@@ -50,27 +50,30 @@ export const ResetPasswordEmail = ({
 
             {/* Instructional Text */}
             <Text className="text-black text-[14px] leading-[24px]">
-              We received a request to reset your password for your MealWell
-              account. If you didn&#39;t make this request, you can safely
-              ignore this email.
+              Thank you for registering with MealWell. To complete the
+              registration process, please verify your email address by clicking
+              the button below.
             </Text>
 
-            {/* Reset Button */}
+            {/* Verification Button */}
             <Section className="text-center mt-[32px] mb-[32px]">
               <Button
                 className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
-                href={resetLink}
-                aria-label="Reset your MealWell password"
+                href={verificationUrl}
+                aria-label="Verify your email address"
               >
-                Reset Password
+                Verify Email
               </Button>
             </Section>
 
             {/* Alternative Link */}
             <Text className="text-black text-[14px] leading-[24px]">
               Or copy and paste this URL into your browser:{" "}
-              <Link href={resetLink} className="text-blue-600 no-underline">
-                {resetLink}
+              <Link
+                href={verificationUrl}
+                className="text-blue-600 no-underline"
+              >
+                {verificationUrl}
               </Link>
             </Text>
 
@@ -79,7 +82,7 @@ export const ResetPasswordEmail = ({
 
             {/* Footer Text */}
             <Text className="text-[#666666] text-[12px] leading-[24px]">
-              If you didn&#39;t request a password reset, please ignore this
+              If you didn&#39;t request this verification, please ignore this
               email or contact support if you have concerns.
             </Text>
           </Container>
@@ -89,9 +92,7 @@ export const ResetPasswordEmail = ({
   );
 };
 
-export function reactResetPasswordEmail(
-  props: BetterAuthResetPasswordEmailProps,
-) {
+export function reactEmailVerificationEmail(props: EmailVerificationProps) {
   console.log(props);
-  return <ResetPasswordEmail {...props} />;
+  return <EmailVerificationEmail {...props} />;
 }

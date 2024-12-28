@@ -15,6 +15,8 @@ import { nextCookies } from "better-auth/next-js";
 import { passkey } from "better-auth/plugins/passkey";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { mongoClient } from "@/db/mongoose";
+import { reactEmailVerificationEmail } from "@/lib/email/email-activation";
+import { reactOtpCodeVerificationEmail } from "@/lib/email/otp-code";
 
 const from = process.env.MEAL_WELL_EMAIL || "delivered@resend.dev";
 const to = process.env.TEST_EMAIL || "";
@@ -31,14 +33,17 @@ export const auth = betterAuth({
         from,
         to: user.email || to,
         subject: "Verify your email address",
-        html: `<a href="${url}">Verify your email address</a>`,
+        react: reactEmailVerificationEmail({
+          username: user.email,
+          verificationUrl: url,
+        }),
       });
       console.log(res, user.email);
     },
   },
   account: {
     accountLinking: {
-      trustedProviders: ["google", "github", "demo-app"],
+      trustedProviders: ["google", "facebook"],
     },
   },
   emailAndPassword: {
@@ -72,8 +77,11 @@ export const auth = betterAuth({
           await resend.emails.send({
             from,
             to: user.email,
-            subject: "Your OTP",
-            html: `Your OTP is ${otp}`,
+            subject: "Your OTP code",
+            react: reactOtpCodeVerificationEmail({
+              username: user.email,
+              otpCode: otp,
+            }),
           });
         },
       },

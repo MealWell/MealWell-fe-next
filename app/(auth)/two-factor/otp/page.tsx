@@ -24,6 +24,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { OtpFormValues, otpSchema } from "@/const/schemas";
 import { client } from "@/lib/auth-client";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 export default function TwoFactorAuth() {
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -91,12 +96,16 @@ export default function TwoFactorAuth() {
                       <FormItem>
                         <FormLabel>One-Time Password</FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Enter 6-digit OTP"
-                            autoComplete="off"
-                            maxLength={6}
-                          />
+                          <InputOTP maxLength={6} {...field}>
+                            <InputOTPGroup className={"w-full justify-center"}>
+                              <InputOTPSlot index={0} />
+                              <InputOTPSlot index={1} />
+                              <InputOTPSlot index={2} />
+                              <InputOTPSlot index={3} />
+                              <InputOTPSlot index={4} />
+                              <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                          </InputOTP>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

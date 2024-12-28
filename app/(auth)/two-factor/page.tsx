@@ -18,13 +18,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { client } from "@/lib/auth-client";
 import { TotpFormValues, totpSchema } from "@/const/schemas";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 export default function TotpVerification() {
   const router = useRouter();
@@ -75,11 +79,16 @@ export default function TotpVerification() {
                       <FormItem>
                         <FormLabel>TOTP Code</FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Enter 6-digit code"
-                            autoComplete="off"
-                          />
+                          <InputOTP maxLength={6} {...field}>
+                            <InputOTPGroup className={"w-full justify-center"}>
+                              <InputOTPSlot index={0} />
+                              <InputOTPSlot index={1} />
+                              <InputOTPSlot index={2} />
+                              <InputOTPSlot index={3} />
+                              <InputOTPSlot index={4} />
+                              <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                          </InputOTP>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

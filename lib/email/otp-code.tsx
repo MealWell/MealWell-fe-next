@@ -1,12 +1,10 @@
 import {
   Body,
-  Button,
   Container,
   Head,
   Heading,
   Hr,
   Html,
-  Link,
   Preview,
   Text,
   Tailwind,

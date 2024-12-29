@@ -8,7 +8,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
-import { NewsletterFormValues, newsletterSchema } from "@/const/newsletter";
+import {
+  NewsletterFormValues,
+  newsletterSchema,
+} from "@/validation/newsletter";
 import { logEventClient, PostHogEventType } from "@/lib/posthog";
 import { Loader2 } from "lucide-react";
 import { FIRST_NAME_MAX, LAST_NAME_MAX, MESSAGE_MAX } from "@/const/limits";

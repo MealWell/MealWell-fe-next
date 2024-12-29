@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import {
   ForgotPasswordFormValues,
   forgotPasswordSchema,
-} from "@/const/schemas";
+} from "@/validation/auth";
 
 export default function ForgotPassword() {
   const [isSubmitted, setIsSubmitted] = useState(false);

@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { SignUpFormValues, signUpSchema } from "@/const/schemas";
+import { SignUpFormValues, signUpSchema } from "@/validation/auth";
 import { signIn, signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";

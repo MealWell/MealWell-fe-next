@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { newsletterSchema } from "@/const/newsletter";
+import { newsletterSchema } from "@/validation/newsletter";
 import { createNewsletterSubscription } from "@/app/service/newsletterService";
 
 export async function POST(request: Request) {

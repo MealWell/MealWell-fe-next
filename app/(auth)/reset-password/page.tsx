@@ -22,7 +22,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ResetPasswordFormValues, resetPasswordSchema } from "@/const/schemas";
+import {
+  ResetPasswordFormValues,
+  resetPasswordSchema,
+} from "@/validation/auth";
 
 export default function ResetPassword() {
   const router = useRouter();

@@ -23,7 +23,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { client } from "@/lib/auth-client";
-import { TotpFormValues, totpSchema } from "@/const/schemas";
+import { TotpFormValues, totpSchema } from "@/validation/auth";
 import {
   InputOTP,
   InputOTPGroup,

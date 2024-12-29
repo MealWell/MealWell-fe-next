@@ -21,7 +21,7 @@ import { AlertCircle, CheckCircle2, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { OtpFormValues, otpSchema } from "@/const/schemas";
+import { OtpFormValues, otpSchema } from "@/validation/auth";
 import { client } from "@/lib/auth-client";
 import {
   InputOTP,

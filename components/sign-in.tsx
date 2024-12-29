@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { SignInFormValues, signInSchema } from "@/const/schemas";
+import { SignInFormValues, signInSchema } from "@/validation/auth";
 import { signIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";

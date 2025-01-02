@@ -1,10 +1,13 @@
 import { model, models, Schema, Types } from "mongoose";
+import { IngredientT } from "@/model/Ingredient";
+import { AllergenT } from "@/model/Allergen";
+import { DietaryPreferenceT } from "@/model/DietaryPreference";
 
 export interface MealT {
   _id: string;
   name: string;
   description?: string;
-  ingredients: { ingredient: string; quantity: number }[]; // Referință la ingredient + cantitatea utilizată (în grame)
+  ingredients: { ingredient: IngredientT; quantity: number }[];
   totalCalories: number;
   totalProteins: number;
   totalFats: number;
@@ -12,8 +15,8 @@ export interface MealT {
   totalFiber: number;
   totalSugar: number;
   totalSodium: number;
-  allergens?: string[];
-  dietaryPreferences?: string[];
+  allergens?: AllergenT[];
+  dietaryPreferences?: DietaryPreferenceT[];
   type: "breakfast" | "snack" | "lunch" | "dinner"; // Tipul mesei
 }
 

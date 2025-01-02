@@ -6,10 +6,10 @@ import { getAllergenById, updateAllergen } from "@/app/service/AllergenService";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const allergen = await getAllergenById(params.id);
+    const allergen = await getAllergenById((await params).id);
     if (!allergen)
       return NextResponse.json(
         { error: "Allergen not found" },
@@ -28,13 +28,16 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const body = await req.json();
     const validatedData = AllergenPartialSchema.parse(body);
 
-    const updatedAllergen = await updateAllergen(params.id, validatedData);
+    const updatedAllergen = await updateAllergen(
+      (await params).id,
+      validatedData,
+    );
     if (!updatedAllergen)
       return NextResponse.json(
         { error: "Allergen not found" },

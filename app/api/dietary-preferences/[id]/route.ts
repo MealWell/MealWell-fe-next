@@ -9,10 +9,10 @@ import {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const preference = await getDietaryPreferenceById(params.id);
+    const preference = await getDietaryPreferenceById((await params).id);
     if (!preference)
       return NextResponse.json(
         { error: "Dietary Preference not found" },
@@ -31,14 +31,14 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const body = await req.json();
     const validatedData = DietaryPreferencePartialSchema.parse(body);
 
     const updatedPreference = await updateDietaryPreference(
-      params.id,
+      (await params).id,
       validatedData,
     );
     if (!updatedPreference)
@@ -61,11 +61,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const deletedPreference = await DietaryPreference.findByIdAndDelete(
-      params.id,
+      (await params).id,
     );
     if (!deletedPreference)
       return NextResponse.json(

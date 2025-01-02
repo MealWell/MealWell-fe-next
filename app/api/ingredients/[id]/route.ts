@@ -30,12 +30,12 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const body = await req.json();
     const data = IngredientPartialSchema.parse(body);
-    const ingredient = await updateIngredient(params.id, data);
+    const ingredient = await updateIngredient((await params).id, data);
 
     if (!ingredient) {
       return NextResponse.json(

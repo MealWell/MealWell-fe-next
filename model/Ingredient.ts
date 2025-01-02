@@ -1,4 +1,6 @@
 import { model, models, Schema, Types } from "mongoose";
+import { AllergenT } from "@/model/Allergen";
+import { DietaryPreferenceT } from "@/model/DietaryPreference";
 
 export interface IngredientT {
   _id: string;
@@ -10,8 +12,8 @@ export interface IngredientT {
   fiber: number; // g per 100g
   sugar: number; // g per 100g
   sodium: number; // mg per 100g
-  allergens?: string[]; // Referințe la alergeni
-  dietaryPreferences?: string[]; // Referințe la preferințe dietare
+  allergens?: AllergenT[]; // Referințe la alergeni
+  dietaryPreferences?: DietaryPreferenceT[]; // Referințe la preferințe dietare
 }
 
 const IngredientSchema = new Schema({

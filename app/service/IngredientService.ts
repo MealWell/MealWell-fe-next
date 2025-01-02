@@ -1,7 +1,12 @@
-import Ingredient, { IngredientT } from "@/model/Ingredient";
+import Ingredient from "@/model/Ingredient";
 import connectMongo from "@/db/mongoose";
+import { z } from "zod";
+import {
+  IngredientPartialSchema,
+  IngredientSchema,
+} from "@/validation/ingredient";
 
-export async function createIngredient(data: Omit<IngredientT, "_id">) {
+export async function createIngredient(data: z.infer<typeof IngredientSchema>) {
   try {
     await connectMongo();
     const ingredient = new Ingredient(data);
@@ -14,7 +19,7 @@ export async function createIngredient(data: Omit<IngredientT, "_id">) {
 
 export async function updateIngredient(
   id: string,
-  data: Partial<Omit<IngredientT, "_id">>,
+  data: z.infer<typeof IngredientPartialSchema>,
 ) {
   try {
     await connectMongo();
@@ -49,6 +54,7 @@ export async function getAllIngredients() {
 
 export async function getPaginatedIngredients(page: number, limit: number) {
   try {
+    await connectMongo();
     const skip = (page - 1) * limit;
     const ingredients = await Ingredient.find()
       .skip(skip)

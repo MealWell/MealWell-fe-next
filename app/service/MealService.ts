@@ -1,6 +1,8 @@
 import Meal, { MealT } from "@/model/Meal";
 import Ingredient, { IngredientT } from "@/model/Ingredient";
 import connectMongo from "@/db/mongoose";
+import { z } from "zod";
+import { MealPartialSchema, MealSchema } from "@/validation/meal";
 
 async function calculateMealValues(
   ingredients: { ingredient: string; quantity: number }[],
@@ -37,19 +39,7 @@ async function calculateMealValues(
   };
 }
 
-export async function createMeal(
-  data: Omit<
-    MealT,
-    | "_id"
-    | "totalCalories"
-    | "totalProteins"
-    | "totalFats"
-    | "totalCarbs"
-    | "totalFiber"
-    | "totalSugar"
-    | "totalSodium"
-  >,
-) {
+export async function createMeal(data: z.infer<typeof MealSchema>) {
   try {
     await connectMongo();
     const calculatedValues = await calculateMealValues(data.ingredients);
@@ -75,12 +65,17 @@ export async function createMeal(
 
 export async function updateMeal(
   id: string,
-  data: Partial<Omit<MealT, "_id">>,
+  data: z.infer<typeof MealPartialSchema>,
 ) {
   try {
-    const existingMeal = await Meal.findById(id).populate(
-      "ingredients.ingredient",
-    );
+    const existingMeal = await Meal.findById(id)
+      .populate("allergens")
+      .populate("dietaryPreferences")
+      .populate("ingredients.ingredient")
+      .populate({
+        path: "ingredients.ingredient",
+        populate: [{ path: "allergens" }, { path: "dietaryPreferences" }],
+      });
     if (!existingMeal) {
       throw new Error("Meal not found");
     }
@@ -94,9 +89,13 @@ export async function updateMeal(
         }),
       );
 
+    let updatedMeal: Partial<MealT> | z.infer<typeof MealPartialSchema> = {
+      ...data,
+    };
+
     if (data.ingredients) {
       const calculatedValues = await calculateMealValues(updatedIngredients);
-      data = {
+      updatedMeal = {
         ...data,
         totalCalories: calculatedValues.totalCalories,
         totalProteins: calculatedValues.totalProteins,
@@ -106,11 +105,11 @@ export async function updateMeal(
         totalSugar: calculatedValues.totalSugar,
         totalSodium: calculatedValues.totalSodium,
         ingredients: updatedIngredients,
+        type: data.type,
       };
     }
 
-    // Actualizăm Meal-ul în baza de date
-    return await Meal.findByIdAndUpdate(id, data, { new: true });
+    return await Meal.findByIdAndUpdate(id, updatedMeal, { new: true });
   } catch (e) {
     console.error(e);
     throw e;
@@ -120,9 +119,13 @@ export async function updateMeal(
 export async function getMealById(id: string) {
   try {
     return await Meal.findById(id)
-      .populate("ingredients.ingredient")
       .populate("allergens")
-      .populate("dietaryPreferences");
+      .populate("dietaryPreferences")
+      .populate("ingredients.ingredient")
+      .populate({
+        path: "ingredients.ingredient",
+        populate: [{ path: "allergens" }, { path: "dietaryPreferences" }],
+      });
   } catch (e) {
     console.error(e);
     throw e;
@@ -132,9 +135,13 @@ export async function getMealById(id: string) {
 export async function getAllMeals() {
   try {
     return await Meal.find()
-      .populate("ingredients.ingredient")
       .populate("allergens")
-      .populate("dietaryPreferences");
+      .populate("dietaryPreferences")
+      .populate("ingredients.ingredient")
+      .populate({
+        path: "ingredients.ingredient",
+        populate: [{ path: "allergens" }, { path: "dietaryPreferences" }],
+      });
   } catch (e) {
     console.error(e);
     throw e;
@@ -147,9 +154,13 @@ export async function getPaginatedMeals(page: number, limit: number) {
     const meals = await Meal.find()
       .skip(skip)
       .limit(limit)
-      .populate("ingredients.ingredient")
       .populate("allergens")
-      .populate("dietaryPreferences");
+      .populate("dietaryPreferences")
+      .populate("ingredients.ingredient")
+      .populate({
+        path: "ingredients.ingredient",
+        populate: [{ path: "allergens" }, { path: "dietaryPreferences" }],
+      });
     const count = await Meal.countDocuments();
     return { meals, count };
   } catch (e) {

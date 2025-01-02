@@ -5,10 +5,10 @@ import { MealPartialSchema } from "@/validation/meal";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const meal = await getMealById(params.id);
+    const meal = await getMealById((await params).id);
     if (!meal) {
       return NextResponse.json({ error: "Meal not found" }, { status: 404 });
     }
@@ -24,11 +24,11 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const data = MealPartialSchema.parse(await request.json());
-    const updatedMeal = await updateMeal(params.id, data);
+    const updatedMeal = await updateMeal((await params).id, data);
     if (!updatedMeal) {
       return NextResponse.json({ error: "Meal not found" }, { status: 404 });
     }

@@ -36,7 +36,7 @@ export default function RootLayout({
             <ThemeProvider attribute="class" defaultTheme="light">
               <Navbar />
               <div className="min-h-screen w-full flex justify-center">
-                <main className={"mt-20 w-full"}>{children}</main>
+                <main className={"my-10 w-full"}>{children}</main>
               </div>
               <Footer />
               <Toaster richColors closeButton />

@@ -32,6 +32,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -194,6 +195,9 @@ export default function AdminDashboard() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Create New User</DialogTitle>
+                <DialogDescription className={"sr-only"}>
+                  Create new user dialog
+                </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleCreateUser} className="space-y-4">
                 <div>
@@ -269,6 +273,9 @@ export default function AdminDashboard() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Ban User</DialogTitle>
+                <DialogDescription className={"sr-only"}>
+                  Ban user dialog
+                </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleBanUser} className="space-y-4">
                 <div>

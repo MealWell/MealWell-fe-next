@@ -3,6 +3,8 @@ import Ingredient, { IngredientT } from "@/model/Ingredient";
 import connectMongo from "@/db/mongoose";
 import { z } from "zod";
 import { MealPartialSchema, MealSchema } from "@/validation/meal";
+import Plan, { PlanT } from "@/model/Plan";
+import { calculateDailyCalories, deletePlan } from "@/app/service/PlanService";
 
 export async function calculateMealValues(
   ingredients: { ingredient: string; quantity: number }[],
@@ -176,9 +178,31 @@ export async function getPaginatedMeals(page: number, limit: number) {
 export async function deleteMeal(id: string) {
   try {
     await connectMongo();
-    return Meal.findByIdAndDelete(id);
+
+    const plansWithMeal: PlanT[] = await Plan.find({
+      meals: id,
+    }).populate("meals");
+
+    for (const plan of plansWithMeal) {
+      plan.meals = plan.meals.filter((meal) => meal._id.toString() !== id);
+
+      if (plan.meals.length === 0) {
+        await deletePlan(plan._id.toString());
+      } else {
+        const planDailyCalories = await calculateDailyCalories(
+          plan.meals.map((meal) => meal._id.toString()),
+        );
+
+        await Plan.findByIdAndUpdate(plan._id, {
+          meals: plan.meals.map((meal) => meal._id.toString()),
+          dailyCalories: planDailyCalories,
+        });
+      }
+    }
+
+    return await Meal.findByIdAndDelete(id);
   } catch (e) {
-    console.error(e);
+    console.error("Error while deleting ingredient:", e);
     throw e;
   }
 }

@@ -6,7 +6,7 @@ import {
   IngredientSchema,
 } from "@/validation/ingredient";
 import Meal, { MealT } from "@/model/Meal";
-import { calculateMealValues } from "@/app/service/MealService";
+import { calculateMealValues, deleteMeal } from "@/app/service/MealService";
 
 export async function createIngredient(data: z.infer<typeof IngredientSchema>) {
   try {
@@ -87,18 +87,13 @@ export async function deleteIngredient(id: string) {
       });
 
     for (const meal of mealsWithIngredient) {
-      console.log("Processing meal:", meal.name);
-
       meal.ingredients = meal.ingredients.filter(
         (ing) => ing.ingredient._id.toString() !== id,
       );
 
       if (meal.ingredients.length === 0) {
-        console.log(`Deleting meal: ${meal.name}`);
-        await Meal.findByIdAndDelete(meal._id);
+        await deleteMeal(meal._id);
       } else {
-        console.log(`Updating meal: ${meal.name}`);
-
         const mealValues = await calculateMealValues(
           meal.ingredients.map((ing) => ({
             ingredient: ing.ingredient._id.toString(),

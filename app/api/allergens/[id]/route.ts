@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import Allergen from "@/model/Allergen";
 import { AllergenPartialSchema } from "@/validation/allergen";
 import { z } from "zod";
-import { getAllergenById, updateAllergen } from "@/app/service/AllergenService";
+import {
+  deleteAllergen,
+  getAllergenById,
+  updateAllergen,
+} from "@/app/service/AllergenService";
 
 export async function GET(
   req: NextRequest,
@@ -61,7 +64,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const deletedAllergen = await Allergen.findByIdAndDelete((await params).id);
+    const deletedAllergen = await deleteAllergen((await params).id);
     if (!deletedAllergen)
       return NextResponse.json(
         { error: "Allergen not found" },

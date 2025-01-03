@@ -4,7 +4,7 @@ import connectMongo from "@/db/mongoose";
 import { z } from "zod";
 import { MealPartialSchema, MealSchema } from "@/validation/meal";
 
-async function calculateMealValues(
+export async function calculateMealValues(
   ingredients: { ingredient: string; quantity: number }[],
 ) {
   let totalCalories = 0;
@@ -68,6 +68,7 @@ export async function updateMeal(
   data: z.infer<typeof MealPartialSchema>,
 ) {
   try {
+    await connectMongo();
     const existingMeal = await Meal.findById(id)
       .populate("allergens")
       .populate("dietaryPreferences")
@@ -118,6 +119,7 @@ export async function updateMeal(
 
 export async function getMealById(id: string) {
   try {
+    await connectMongo();
     return await Meal.findById(id)
       .populate("allergens")
       .populate("dietaryPreferences")
@@ -134,6 +136,7 @@ export async function getMealById(id: string) {
 
 export async function getAllMeals() {
   try {
+    await connectMongo();
     return await Meal.find()
       .populate("allergens")
       .populate("dietaryPreferences")
@@ -150,6 +153,7 @@ export async function getAllMeals() {
 
 export async function getPaginatedMeals(page: number, limit: number) {
   try {
+    await connectMongo();
     const skip = (page - 1) * limit;
     const meals = await Meal.find()
       .skip(skip)

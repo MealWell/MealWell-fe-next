@@ -1,5 +1,7 @@
 import Allergen, { AllergenT } from "@/model/Allergen";
 import connectMongo from "@/db/mongoose";
+import Ingredient from "@/model/Ingredient";
+import Meal from "@/model/Meal";
 
 export async function createAllergen(data: Omit<AllergenT, "_id">) {
   try {
@@ -55,6 +57,21 @@ export async function getPaginatedAllergens(page: number, limit: number) {
     const allergens = await Allergen.find().skip(skip).limit(limit);
     const count = await Allergen.countDocuments();
     return { allergens, count };
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export async function deleteAllergen(id: string) {
+  try {
+    await connectMongo();
+    await Ingredient.updateMany(
+      { allergens: id },
+      { $pull: { allergens: id } },
+    );
+    await Meal.updateMany({ allergens: id }, { $pull: { allergens: id } });
+    return Allergen.findByIdAndDelete(id);
   } catch (e) {
     console.error(e);
     throw e;

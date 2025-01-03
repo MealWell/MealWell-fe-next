@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  deleteIngredient,
   getIngredientById,
   updateIngredient,
 } from "@/app/service/IngredientService";
@@ -45,6 +46,30 @@ export async function PUT(
     }
 
     return NextResponse.json(ingredient);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const deletedIngredient = await deleteIngredient((await params).id);
+    if (!deletedIngredient)
+      return NextResponse.json(
+        { error: "Ingredient not found" },
+        { status: 404 },
+      );
+
+    return NextResponse.json({
+      message: "Ingredient deleted successfully",
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

@@ -5,6 +5,8 @@ import {
   IngredientPartialSchema,
   IngredientSchema,
 } from "@/validation/ingredient";
+import Meal, { MealT } from "@/model/Meal";
+import { calculateMealValues } from "@/app/service/MealService";
 
 export async function createIngredient(data: z.infer<typeof IngredientSchema>) {
   try {
@@ -65,6 +67,65 @@ export async function getPaginatedIngredients(page: number, limit: number) {
     return { ingredients, count };
   } catch (e) {
     console.error(e);
+    throw e;
+  }
+}
+
+export async function deleteIngredient(id: string) {
+  try {
+    await connectMongo();
+
+    const mealsWithIngredient: MealT[] = await Meal.find({
+      "ingredients.ingredient": id,
+    })
+      .populate("allergens")
+      .populate("dietaryPreferences")
+      .populate("ingredients.ingredient")
+      .populate({
+        path: "ingredients.ingredient",
+        populate: [{ path: "allergens" }, { path: "dietaryPreferences" }],
+      });
+
+    for (const meal of mealsWithIngredient) {
+      console.log("Processing meal:", meal.name);
+
+      meal.ingredients = meal.ingredients.filter(
+        (ing) => ing.ingredient._id.toString() !== id,
+      );
+
+      if (meal.ingredients.length === 0) {
+        console.log(`Deleting meal: ${meal.name}`);
+        await Meal.findByIdAndDelete(meal._id);
+      } else {
+        console.log(`Updating meal: ${meal.name}`);
+
+        const mealValues = await calculateMealValues(
+          meal.ingredients.map((ing) => ({
+            ingredient: ing.ingredient._id.toString(),
+            quantity: ing.quantity,
+          })),
+        );
+
+        await Meal.findByIdAndUpdate(meal._id, {
+          ingredients: meal.ingredients.map((ing) => ({
+            ingredient: ing.ingredient._id,
+            quantity: ing.quantity,
+          })),
+          totalCalories: mealValues.totalCalories,
+          totalProteins: mealValues.totalProteins,
+          totalFats: mealValues.totalFats,
+          totalCarbs: mealValues.totalCarbs,
+          totalFiber: mealValues.totalFiber,
+          totalSugar: mealValues.totalSugar,
+          totalSodium: mealValues.totalSodium,
+        });
+      }
+    }
+
+    console.log(`Deleting ingredient with id: ${id}`);
+    return await Ingredient.findByIdAndDelete(id);
+  } catch (e) {
+    console.error("Error while deleting ingredient:", e);
     throw e;
   }
 }

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import DietaryPreference from "@/model/DietaryPreference";
 import { DietaryPreferencePartialSchema } from "@/validation/dietaryPreference";
 import { z } from "zod";
 import {
+  deleteDietaryPreference,
   getDietaryPreferenceById,
   updateDietaryPreference,
 } from "@/app/service/DietaryPreferenceService";
@@ -64,9 +64,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const deletedPreference = await DietaryPreference.findByIdAndDelete(
-      (await params).id,
-    );
+    const deletedPreference = await deleteDietaryPreference((await params).id);
     if (!deletedPreference)
       return NextResponse.json(
         { error: "Dietary Preference not found" },

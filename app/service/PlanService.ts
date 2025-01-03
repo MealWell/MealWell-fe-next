@@ -1,24 +1,43 @@
-import Plan, { PlanT } from "@/model/Plan";
-import Meal from "@/model/Meal";
+import Plan from "@/model/Plan";
+import { MealT } from "@/model/Meal";
 import connectMongo from "@/db/mongoose";
+import { getMealById } from "@/app/service/MealService";
+import { z } from "zod";
+import { PlanPartialSchema, PlanSchema } from "@/validation/plan";
 
-async function calculatePlanCalories(meals: string[]) {
-  let totalCalories = 0;
+export async function calculateDailyCalories(meals: string[]) {
+  const mealCategories = {
+    breakfast: [] as MealT[],
+    snack: [] as MealT[],
+    lunch: [] as MealT[],
+    dinner: [] as MealT[],
+  };
 
   for (const mealId of meals) {
-    const meal = await Meal.findById(mealId);
-    if (meal) {
-      totalCalories += meal.totalCalories;
+    const meal: MealT = await getMealById(mealId);
+    if (meal && meal.type in mealCategories) {
+      mealCategories[meal.type].push(meal);
     }
   }
 
-  return totalCalories;
+  let dailyCalories = 0;
+
+  for (const [, meals] of Object.entries(mealCategories)) {
+    if (meals.length > 0) {
+      const categoryCalories =
+        meals.reduce((sum, meal) => sum + meal.totalCalories, 0) / meals.length;
+
+      dailyCalories += categoryCalories;
+    }
+  }
+
+  return dailyCalories;
 }
 
-export async function createPlan(data: Omit<PlanT, "_id" | "dailyCalories">) {
+export async function createPlan(data: z.infer<typeof PlanSchema>) {
   try {
     await connectMongo();
-    const dailyCalories = await calculatePlanCalories(data.meals);
+    const dailyCalories = await calculateDailyCalories(data.meals);
 
     const planData = {
       ...data,
@@ -35,7 +54,7 @@ export async function createPlan(data: Omit<PlanT, "_id" | "dailyCalories">) {
 
 export async function updatePlan(
   id: string,
-  data: Partial<Omit<PlanT, "_id" | "dailyCalories">>,
+  data: z.infer<typeof PlanPartialSchema>,
 ) {
   try {
     await connectMongo();
@@ -47,7 +66,7 @@ export async function updatePlan(
     let updatedDailyCalories = existingPlan.dailyCalories;
 
     if (data.meals) {
-      updatedDailyCalories = await calculatePlanCalories(data.meals);
+      updatedDailyCalories = await calculateDailyCalories(data.meals);
     }
 
     const updatedPlan = {

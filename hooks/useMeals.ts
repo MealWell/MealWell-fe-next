@@ -19,6 +19,16 @@ export function useMeals(page = 1, limit = 10) {
   });
 }
 
+export function useAllMeals() {
+  return useQuery<MealT[]>({
+    queryKey: ["meals"],
+    queryFn: async () => {
+      const { data } = await axios.get(`${API_URL}`);
+      return data;
+    },
+  });
+}
+
 export function useMeal(id?: string) {
   return useQuery<MealT>({
     queryKey: ["meal", id],

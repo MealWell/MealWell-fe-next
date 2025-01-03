@@ -1,4 +1,5 @@
 import { model, models, Schema, Types } from "mongoose";
+import { MealT } from "@/model/Meal";
 
 export interface PlanT {
   _id: string;
@@ -6,7 +7,7 @@ export interface PlanT {
   description?: string;
   goal: "weight_loss" | "muscle_gain" | "balanced" | "vegetarian";
   dailyCalories: number;
-  meals: string[];
+  meals: MealT[];
   keyFeatures: string[];
 }
 

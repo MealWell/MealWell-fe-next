@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
 import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
+import { TypographyH2 } from "@/components/typography/TypographyH2";
 
 export default function MealsPage() {
   const [page, setPage] = useState(1);
@@ -39,7 +40,7 @@ export default function MealsPage() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold mb-8">Meals management</h1>
+      <TypographyH2>Meals management</TypographyH2>
       <Button
         onClick={() => router.push("/management/meals/create")}
         className="mb-4"

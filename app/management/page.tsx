@@ -6,6 +6,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { TypographyH2 } from "@/components/typography/TypographyH2";
 
 export default function ManagementPage() {
   const entities = [
@@ -18,7 +19,7 @@ export default function ManagementPage() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold mb-8">Entity Management</h1>
+      <TypographyH2>Entity Management</TypographyH2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {entities.map((entity) => (
           <Card key={entity.name}>

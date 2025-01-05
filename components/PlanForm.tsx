@@ -34,6 +34,7 @@ import {
 import { MealT } from "@/model/Meal";
 import { Badge } from "@/components/ui/badge";
 import { TypographyList } from "@/components/typography/TypographyList";
+import { TypographyP } from "@/components/typography/TypographyP";
 
 type PlanFormProps =
   | {
@@ -295,7 +296,7 @@ export default function PlanForm(props: PlanFormProps) {
               <CardTitle>Average calories per day</CardTitle>
             </CardHeader>
             <CardContent>
-              <p>{planDailyCalories} kcal</p>
+              <TypographyP>{planDailyCalories} kcal</TypographyP>
             </CardContent>
           </Card>
         </div>

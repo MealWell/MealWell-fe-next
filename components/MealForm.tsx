@@ -39,6 +39,8 @@ import {
 } from "@/components/ui/form";
 import { useCreateMeal, useUpdateMeal } from "@/hooks/useMeals";
 import { AxiosError } from "axios";
+import { TypographyH4 } from "@/components/typography/TypographyH4";
+import { TypographyP } from "@/components/typography/TypographyP";
 
 function calculateMealValues(
   ingredients: { ingredient: IngredientT; quantity: number }[],
@@ -290,7 +292,7 @@ export default function MealForm(props: MealFormProps) {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p>
+                      <TypographyP>
                         Allergens:{" "}
                         {ing.ingredient.allergens
                           ?.map((a: AllergenT) => a.name)
@@ -300,7 +302,7 @@ export default function MealForm(props: MealFormProps) {
                         {ing.ingredient.dietaryPreferences
                           ?.map((dp: DietaryPreferenceT) => dp.name)
                           .join(", ") || "None"}
-                      </p>
+                      </TypographyP>
                     </CardContent>
                     <CardFooter>
                       <Button
@@ -360,9 +362,9 @@ export default function MealForm(props: MealFormProps) {
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-muted-foreground">
+                <TypographyP className="text-sm text-muted-foreground">
                   No allergen detected.
-                </p>
+                </TypographyP>
               )}
             </CardContent>
           </Card>
@@ -382,9 +384,9 @@ export default function MealForm(props: MealFormProps) {
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-muted-foreground">
+                <TypographyP className="text-sm text-muted-foreground">
                   No dietary preference detected.
-                </p>
+                </TypographyP>
               )}
             </CardContent>
           </Card>
@@ -438,7 +440,7 @@ export default function MealForm(props: MealFormProps) {
         />
         {nutritionValues && (
           <div className="mt-4">
-            <h4 className="text-lg font-semibold">Nutritional Values:</h4>
+            <TypographyH4>Nutritional Values:</TypographyH4>
             <div
               className={"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"}
             >
@@ -447,7 +449,9 @@ export default function MealForm(props: MealFormProps) {
                   <CardTitle>Calories</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>{nutritionValues.totalCalories} kcal</p>
+                  <TypographyP>
+                    {nutritionValues.totalCalories} kcal
+                  </TypographyP>
                 </CardContent>
               </Card>
 
@@ -456,7 +460,7 @@ export default function MealForm(props: MealFormProps) {
                   <CardTitle>Proteins</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>{nutritionValues.totalProteins} g</p>
+                  <TypographyP>{nutritionValues.totalProteins} g</TypographyP>
                 </CardContent>
               </Card>
 
@@ -465,7 +469,7 @@ export default function MealForm(props: MealFormProps) {
                   <CardTitle>Fats</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>{nutritionValues.totalFats} g</p>
+                  <TypographyP>{nutritionValues.totalFats} g</TypographyP>
                 </CardContent>
               </Card>
 
@@ -474,7 +478,7 @@ export default function MealForm(props: MealFormProps) {
                   <CardTitle>Carbohydrates</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>{nutritionValues.totalCarbs} g</p>
+                  <TypographyP>{nutritionValues.totalCarbs} g</TypographyP>
                 </CardContent>
               </Card>
 
@@ -483,7 +487,7 @@ export default function MealForm(props: MealFormProps) {
                   <CardTitle>Fibres</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>{nutritionValues.totalFiber} g</p>
+                  <TypographyP>{nutritionValues.totalFiber} g</TypographyP>
                 </CardContent>
               </Card>
 
@@ -492,7 +496,7 @@ export default function MealForm(props: MealFormProps) {
                   <CardTitle>Sugar</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>{nutritionValues.totalSugar} g</p>
+                  <TypographyP>{nutritionValues.totalSugar} g</TypographyP>
                 </CardContent>
               </Card>
 
@@ -501,7 +505,7 @@ export default function MealForm(props: MealFormProps) {
                   <CardTitle>Sodium</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>{nutritionValues.totalSodium} mg</p>
+                  <TypographyP>{nutritionValues.totalSodium} mg</TypographyP>
                 </CardContent>
               </Card>
             </div>

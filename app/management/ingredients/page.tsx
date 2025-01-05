@@ -97,7 +97,7 @@ export default function IngredientsPage() {
               <TableHead>Proteins</TableHead>
               <TableHead>Fats</TableHead>
               <TableHead>Carbohydrates</TableHead>
-              <TableHead>Acțiuni</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

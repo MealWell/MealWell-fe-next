@@ -82,9 +82,7 @@ export default function AllergensPage() {
 
   return (
     <>
-      <TypographyH2 className="text-3xl font-bold mb-8">
-        Allergens Management
-      </TypographyH2>
+      <TypographyH2>Allergens Management</TypographyH2>
       <Button onClick={() => setIsCreateModalOpen(true)} className="mb-4">
         Create Allergen
       </Button>

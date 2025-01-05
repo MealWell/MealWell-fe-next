@@ -52,6 +52,7 @@ import {
 } from "@/components/ui/table";
 import QRCode from "react-qr-code";
 import CopyButton from "@/components/ui/copy-button";
+import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 
 export default function UserCard(props: {
   session: Session | null;
@@ -68,6 +69,8 @@ export default function UserCard(props: {
   const [isSignOut, setIsSignOut] = useState<boolean>(false);
   const [emailVerificationPending, setEmailVerificationPending] =
     useState<boolean>(false);
+
+  const { showConfirmationModal } = useConfirmationModal();
   return (
     <Card>
       <CardHeader>
@@ -159,29 +162,36 @@ export default function UserCard(props: {
                     <button
                       className="text-destructive cursor-pointer text-xs underline"
                       onClick={async () => {
-                        setIsTerminating(session.id);
-                        let res;
-                        if (session.id === props.session?.session.id) {
-                          res = await signOut({
-                            fetchOptions: {
-                              onSuccess() {
-                                router.push("/");
-                              },
-                            },
-                          });
-                        } else {
-                          res = await client.revokeSession({
-                            token: session.token,
-                          });
-                        }
+                        showConfirmationModal({
+                          title: "Confirm terminate/sign out session",
+                          description:
+                            "Are you sure you want to terminate/sign out session?",
+                          onConfirm: async () => {
+                            setIsTerminating(session.id);
+                            let res;
+                            if (session.id === props.session?.session.id) {
+                              res = await signOut({
+                                fetchOptions: {
+                                  onSuccess() {
+                                    router.push("/");
+                                  },
+                                },
+                              });
+                            } else {
+                              res = await client.revokeSession({
+                                token: session.token,
+                              });
+                            }
 
-                        if (res.error) {
-                          toast.error(res.error.message);
-                        } else {
-                          toast.success("Session terminated successfully");
-                        }
-                        router.refresh();
-                        setIsTerminating(undefined);
+                            if (res.error) {
+                              toast.error(res.error.message);
+                            } else {
+                              toast.success("Session terminated successfully");
+                            }
+                            router.refresh();
+                            setIsTerminating(undefined);
+                          },
+                        });
                       }}
                     >
                       {isTerminating === session.id ? (

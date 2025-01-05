@@ -7,6 +7,7 @@ import { CSPostHogProvider } from "@/app/posthog-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 import QueryClientProviderWrapper from "@/components/QueryClientProviderWrapper";
+import { GlobalConfirmationModalProvider } from "@/context/GlobalConfirmationModalContext";
 
 export const metadata: Metadata = {
   title: {
@@ -34,12 +35,14 @@ export default function RootLayout({
         <QueryClientProviderWrapper>
           <body className={`${inter.className} antialiased`}>
             <ThemeProvider attribute="class" defaultTheme="light">
-              <Navbar />
-              <div className="min-h-screen w-full flex justify-center">
-                <main className={"my-10 w-full"}>{children}</main>
-              </div>
-              <Footer />
-              <Toaster richColors closeButton />
+              <GlobalConfirmationModalProvider>
+                <Navbar />
+                <div className="min-h-screen w-full flex justify-center">
+                  <main className={"my-10 w-full"}>{children}</main>
+                </div>
+                <Footer />
+                <Toaster richColors closeButton />
+              </GlobalConfirmationModalProvider>
             </ThemeProvider>
           </body>
         </QueryClientProviderWrapper>

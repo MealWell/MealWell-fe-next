@@ -14,6 +14,7 @@ import {
 import { useRouter } from "next/navigation";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
+import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 
 export default function MealsPage() {
   const [page, setPage] = useState(1);
@@ -21,14 +22,19 @@ export default function MealsPage() {
   const { data, isLoading, error } = useMeals(page, limit);
   const deleteMeal = useDeleteMeal();
   const router = useRouter();
+  const { showConfirmationModal } = useConfirmationModal();
 
   if (isLoading) return <LoadingSkeleton />;
   if (error) return <ErrorDisplay message={error.message} />;
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this meal?")) {
-      await deleteMeal.mutateAsync(id);
-    }
+    showConfirmationModal({
+      title: "Confirm delete meal",
+      description: "Are you sure you want to delete this meal?",
+      onConfirm: async () => {
+        await deleteMeal.mutateAsync(id);
+      },
+    });
   };
 
   return (

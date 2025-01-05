@@ -45,6 +45,7 @@ import {
 } from "@/validation/dietaryPreference";
 import { DietaryPreferenceT } from "@/model/DietaryPreference";
 import { AxiosError } from "axios";
+import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 
 export default function DietaryPreferencesPage() {
   const [page, setPage] = useState(1);
@@ -58,6 +59,8 @@ export default function DietaryPreferencesPage() {
   const [editingDietaryPreference, setEditingDietaryPreference] =
     useState<DietaryPreferenceT | null>(null);
 
+  const { showConfirmationModal } = useConfirmationModal();
+
   if (isLoading) return <LoadingSkeleton />;
   if (error) return <ErrorDisplay message={error.message} />;
 
@@ -69,9 +72,13 @@ export default function DietaryPreferencesPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this dietary preference?")) {
-      await deleteDietaryPreference.mutateAsync(id);
-    }
+    showConfirmationModal({
+      title: "Confirm delete dietary preference",
+      description: "Are you sure you want to delete this dietary preference?",
+      onConfirm: async () => {
+        await deleteDietaryPreference.mutateAsync(id);
+      },
+    });
   };
 
   return (

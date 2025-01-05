@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { client } from "@/lib/auth-client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -47,6 +47,7 @@ import {
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 
 export default function AdminDashboard() {
   const queryClient = useQueryClient();
@@ -64,6 +65,8 @@ export default function AdminDashboard() {
     reason: "",
     expirationDate: undefined as Date | undefined,
   });
+
+  const { showConfirmationModal } = useConfirmationModal();
 
   const { data: users, isLoading: isUsersLoading } = useQuery({
     queryKey: ["users"],
@@ -86,103 +89,133 @@ export default function AdminDashboard() {
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading("create");
-    try {
-      await client.admin.createUser({
-        email: newUser.email,
-        password: newUser.password,
-        name: newUser.name,
-        role: newUser.role,
-      });
-      toast.success("User created successfully");
-      setNewUser({ email: "", password: "", name: "", role: "user" });
-      setIsDialogOpen(false);
-      queryClient.invalidateQueries({
-        queryKey: ["users"],
-      });
-    } catch (error) {
-      const err = error as { message: string };
-      toast.error(err.message || "Failed to create user");
-    } finally {
-      setIsLoading(undefined);
-    }
+    showConfirmationModal({
+      title: "Confirm create user",
+      description: "Are you sure you want to create user?",
+      onConfirm: async () => {
+        setIsLoading("create");
+        try {
+          await client.admin.createUser({
+            email: newUser.email,
+            password: newUser.password,
+            name: newUser.name,
+            role: newUser.role,
+          });
+          toast.success("User created successfully");
+          setNewUser({ email: "", password: "", name: "", role: "user" });
+          setIsDialogOpen(false);
+          queryClient.invalidateQueries({
+            queryKey: ["users"],
+          });
+        } catch (error) {
+          const err = error as { message: string };
+          toast.error(err.message || "Failed to create user");
+        } finally {
+          setIsLoading(undefined);
+        }
+      },
+    });
   };
 
   const handleDeleteUser = async (id: string) => {
-    setIsLoading(`delete-${id}`);
-    try {
-      await client.admin.removeUser({ userId: id });
-      toast.success("User deleted successfully");
-      queryClient.invalidateQueries({
-        queryKey: ["users"],
-      });
-    } catch (error) {
-      const err = error as { message: string };
-      toast.error(err.message || "Failed to delete user");
-    } finally {
-      setIsLoading(undefined);
-    }
+    showConfirmationModal({
+      title: "Confirm delete user",
+      description: "Are you sure you want to delete user?",
+      onConfirm: async () => {
+        setIsLoading(`delete-${id}`);
+        try {
+          await client.admin.removeUser({ userId: id });
+          toast.success("User deleted successfully");
+          queryClient.invalidateQueries({
+            queryKey: ["users"],
+          });
+        } catch (error) {
+          const err = error as { message: string };
+          toast.error(err.message || "Failed to delete user");
+        } finally {
+          setIsLoading(undefined);
+        }
+      },
+    });
   };
 
   const handleRevokeSessions = async (id: string) => {
-    setIsLoading(`revoke-${id}`);
-    try {
-      await client.admin.revokeUserSessions({ userId: id });
-      toast.success("Sessions revoked for user");
-    } catch (error) {
-      const err = error as { message: string };
-      toast.error(err.message || "Failed to revoke sessions");
-    } finally {
-      setIsLoading(undefined);
-    }
+    showConfirmationModal({
+      title: "Confirm revoke session",
+      description: "Are you sure you want to revoke session?",
+      onConfirm: async () => {
+        setIsLoading(`revoke-${id}`);
+        try {
+          await client.admin.revokeUserSessions({ userId: id });
+          toast.success("Sessions revoked for user");
+        } catch (error) {
+          const err = error as { message: string };
+          toast.error(err.message || "Failed to revoke sessions");
+        } finally {
+          setIsLoading(undefined);
+        }
+      },
+    });
   };
 
   const handleBanUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(`ban-${banForm.userId}`);
-    try {
-      if (!banForm.expirationDate) {
-        throw new Error("Expiration date is required");
-      }
-      await client.admin.banUser({
-        userId: banForm.userId,
-        banReason: banForm.reason,
-        banExpiresIn: banForm.expirationDate.getTime() - new Date().getTime(),
-      });
-      toast.success("User banned successfully");
-      setIsBanDialogOpen(false);
-      queryClient.invalidateQueries({
-        queryKey: ["users"],
-      });
-    } catch (error) {
-      const err = error as { message: string };
-      toast.error(err.message || "Failed to ban user");
-    } finally {
-      setIsLoading(undefined);
-    }
+    showConfirmationModal({
+      title: "Confirm ban user",
+      description: "Are you sure you want to ban this user?",
+      onConfirm: async () => {
+        setIsLoading(`ban-${banForm.userId}`);
+        try {
+          if (!banForm.expirationDate) {
+            throw new Error("Expiration date is required");
+          }
+          await client.admin.banUser({
+            userId: banForm.userId,
+            banReason: banForm.reason,
+            banExpiresIn:
+              banForm.expirationDate.getTime() - new Date().getTime(),
+          });
+          toast.success("User banned successfully");
+          setIsBanDialogOpen(false);
+          queryClient.invalidateQueries({
+            queryKey: ["users"],
+          });
+        } catch (error) {
+          const err = error as { message: string };
+          toast.error(err.message || "Failed to ban user");
+        } finally {
+          setIsLoading(undefined);
+        }
+      },
+    });
   };
 
   const handleUnbanUser = async (userId: string) => {
-    setIsLoading(`ban-${userId}`);
-    try {
-      await client.admin.unbanUser({
-        userId: userId,
-      });
-      toast.success("User unbanned successfully");
-      queryClient.invalidateQueries({
-        queryKey: ["users"],
-      });
-    } catch (error) {
-      const err = error as { message: string };
-      toast.error(err.message || "Failed to unban user");
-    } finally {
-      setIsLoading(undefined);
-    }
+    showConfirmationModal({
+      title: "Confirm unban user",
+      description: "Are you sure you want to unban this user?",
+      onConfirm: async () => {
+        setIsLoading(`ban-${userId}`);
+        try {
+          await client.admin.unbanUser({
+            userId: userId,
+          });
+          toast.success("User unbanned successfully");
+          queryClient.invalidateQueries({
+            queryKey: ["users"],
+          });
+        } catch (error) {
+          const err = error as { message: string };
+          toast.error(err.message || "Failed to unban user");
+        } finally {
+          setIsLoading(undefined);
+        }
+      },
+    });
   };
 
   return (
     <div className="container mx-auto p-4 space-y-8">
-      <Toaster richColors />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-2xl">Admin Dashboard</CardTitle>

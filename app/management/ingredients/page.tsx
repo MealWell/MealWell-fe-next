@@ -45,6 +45,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { TypographyH2 } from "@/components/typography/TypographyH2";
+import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 
 export default function IngredientsPage() {
   const [page, setPage] = useState(1);
@@ -56,6 +57,8 @@ export default function IngredientsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingIngredient, setEditingIngredient] =
     useState<IngredientT | null>(null);
+
+  const { showConfirmationModal } = useConfirmationModal();
 
   if (isLoading) return <LoadingSkeleton />;
   if (error) return <ErrorDisplay message={error.message} />;
@@ -70,9 +73,13 @@ export default function IngredientsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this ingredient?")) {
-      await deleteIngredient.mutateAsync(id);
-    }
+    showConfirmationModal({
+      title: "Confirm delete ingredient",
+      description: "Are you sure you want to delete this ingredient?",
+      onConfirm: async () => {
+        await deleteIngredient.mutateAsync(id);
+      },
+    });
   };
 
   return (

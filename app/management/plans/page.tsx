@@ -16,6 +16,7 @@ import { ErrorDisplay } from "@/components/ErrorDisplay";
 import { PlanT } from "@/model/Plan";
 import { useRouter } from "next/navigation";
 import { TypographyH2 } from "@/components/typography/TypographyH2";
+import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 
 export default function PlansPage() {
   const [page, setPage] = useState(1);
@@ -25,14 +26,19 @@ export default function PlansPage() {
 
   const router = useRouter();
 
+  const { showConfirmationModal } = useConfirmationModal();
 
   if (isLoading) return <LoadingSkeleton />;
   if (error) return <ErrorDisplay message={error.message} />;
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this plan?")) {
-      await deletePlan.mutateAsync(id);
-    }
+    showConfirmationModal({
+      title: "Confirm delete plan",
+      description: "Are you sure you want to delete this plan?",
+      onConfirm: async () => {
+        await deletePlan.mutateAsync(id);
+      },
+    });
   };
 
   return (

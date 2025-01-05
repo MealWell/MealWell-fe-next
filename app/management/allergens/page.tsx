@@ -42,6 +42,7 @@ import { ErrorDisplay } from "@/components/ErrorDisplay";
 import { TypographyH2 } from "@/components/typography/TypographyH2";
 import { AxiosError } from "axios";
 import { AllergenT } from "@/model/Allergen";
+import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 
 export default function AllergensPage() {
   const [page, setPage] = useState(1);
@@ -54,6 +55,8 @@ export default function AllergensPage() {
   const [editingAllergen, setEditingAllergen] = useState<AllergenT | null>(
     null,
   );
+
+  const { showConfirmationModal } = useConfirmationModal();
 
   if (isLoading) return <LoadingSkeleton />;
   if (error) return <ErrorDisplay message={error.message} />;
@@ -68,9 +71,13 @@ export default function AllergensPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this allergen?")) {
-      await deleteAllergen.mutateAsync(id);
-    }
+    showConfirmationModal({
+      title: "Confirm delete allergen",
+      description: "Are you sure you want to delete this allergen?",
+      onConfirm: async () => {
+        await deleteAllergen.mutateAsync(id);
+      },
+    });
   };
 
   return (

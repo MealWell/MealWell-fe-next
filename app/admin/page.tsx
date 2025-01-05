@@ -67,6 +67,7 @@ export default function AdminDashboard() {
   });
 
   const { showConfirmationModal } = useConfirmationModal();
+  const [page, setPage] = useState(1);
 
   const { data: users, isLoading: isUsersLoading } = useQuery({
     queryKey: ["users"],
@@ -75,6 +76,7 @@ export default function AdminDashboard() {
         {
           query: {
             limit: 10,
+            offset: 10 * (page - 1),
             sortBy: "createdAt",
             sortDirection: "desc",
           },
@@ -378,92 +380,108 @@ export default function AdminDashboard() {
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Banned</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {users?.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.role || "user"}</TableCell>
-                    <TableCell>
-                      {user.banned ? (
-                        <Badge variant="destructive">Yes</Badge>
-                      ) : (
-                        <Badge variant="outline">No</Badge>
-                      )}
-                      {user.banned && user.banReason && (
-                        <div className="text-sm text-muted-foreground">
-                          <strong>Reason:</strong> {user.banReason}
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDeleteUser(user.id)}
-                          disabled={isLoading?.startsWith("delete")}
-                        >
-                          {isLoading === `delete-${user.id}` ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Trash className="h-4 w-4" />
-                          )}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleRevokeSessions(user.id)}
-                          disabled={isLoading?.startsWith("revoke")}
-                        >
-                          {isLoading === `revoke-${user.id}` ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <RefreshCw className="h-4 w-4" />
-                          )}
-                          Revoke sessions
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={async () => {
-                            setBanForm({
-                              userId: user.id,
-                              reason: "",
-                              expirationDate: undefined,
-                            });
-                            if (user.banned) {
-                              await handleUnbanUser(user.id);
-                            } else {
-                              setIsBanDialogOpen(true);
-                            }
-                          }}
-                          disabled={isLoading?.startsWith("ban")}
-                        >
-                          {isLoading === `ban-${user.id}` ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : user.banned ? (
-                            "Unban"
-                          ) : (
-                            "Ban"
-                          )}
-                        </Button>
-                      </div>
-                    </TableCell>
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Banned</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {users?.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell>{user.role || "user"}</TableCell>
+                      <TableCell>
+                        {user.banned ? (
+                          <Badge variant="destructive">Yes</Badge>
+                        ) : (
+                          <Badge variant="outline">No</Badge>
+                        )}
+                        {user.banned && user.banReason && (
+                          <div className="text-sm text-muted-foreground">
+                            <strong>Reason:</strong> {user.banReason}
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDeleteUser(user.id)}
+                            disabled={isLoading?.startsWith("delete")}
+                          >
+                            {isLoading === `delete-${user.id}` ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Trash className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleRevokeSessions(user.id)}
+                            disabled={isLoading?.startsWith("revoke")}
+                          >
+                            {isLoading === `revoke-${user.id}` ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <RefreshCw className="h-4 w-4" />
+                            )}
+                            Revoke sessions
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={async () => {
+                              setBanForm({
+                                userId: user.id,
+                                reason: "",
+                                expirationDate: undefined,
+                              });
+                              if (user.banned) {
+                                await handleUnbanUser(user.id);
+                              } else {
+                                setIsBanDialogOpen(true);
+                              }
+                            }}
+                            disabled={isLoading?.startsWith("ban")}
+                          >
+                            {isLoading === `ban-${user.id}` ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : user.banned ? (
+                              "Unban"
+                            ) : (
+                              "Ban"
+                            )}
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <div className="mt-4 flex justify-between">
+                <Button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                >
+                  Previous
+                </Button>
+                <Button
+                  onClick={() => setPage((p) => p + 1)}
+                  disabled={!!users ? users.length < 10 : true}
+                >
+                  Next
+                </Button>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

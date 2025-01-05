@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Entity Management | Meal Well",
+    default: "Entity Management | Meal Well",
+  },
+  description: "MealWell Entity Management Page",
+};
+
 export default function Layout({
   children,
 }: Readonly<{

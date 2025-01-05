@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s | MealWell",
     default: "MealWell",
   },
-  description: "The MealWell application",
+  description: "MealWell - Healthy Eating Made Simple",
   openGraph: {
     title: {
       template: "%s | MealWell",

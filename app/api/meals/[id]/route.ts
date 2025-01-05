@@ -47,10 +47,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const deletedMeal = await deleteMeal(params.id);
+    const deletedMeal = await deleteMeal((await params).id);
     if (!deletedMeal) {
       return NextResponse.json({ error: "Meal not found" }, { status: 404 });
     }

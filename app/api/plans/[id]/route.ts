@@ -5,10 +5,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const plan = await getPlanById(params.id);
+    const plan = await getPlanById((await params).id);
     if (!plan) {
       return NextResponse.json({ error: "Plan not found" }, { status: 404 });
     }
@@ -24,11 +24,11 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const data = PlanPartialSchema.parse(await request.json());
-    const updatedPlan = await updatePlan(params.id, data);
+    const updatedPlan = await updatePlan((await params).id, data);
     if (!updatedPlan) {
       return NextResponse.json({ error: "Plan not found" }, { status: 404 });
     }
@@ -47,10 +47,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const deletedPlan = await deletePlan(params.id);
+    const deletedPlan = await deletePlan((await params).id);
     if (!deletedPlan) {
       return NextResponse.json({ error: "Plan not found" }, { status: 404 });
     }

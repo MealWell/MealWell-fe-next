@@ -1,4 +1,3 @@
-import "tailwindcss/tailwind.css";
 import { TypographyH3 } from "@/components/typography/TypographyH3";
 import {
   Carousel,

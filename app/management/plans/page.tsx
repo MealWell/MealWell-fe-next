@@ -48,46 +48,48 @@ export default function PlansPage() {
         onClick={() => router.push("/management/plans/create")}
         className="mb-4"
       >
-        Create Meal
+        Create Plan
       </Button>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Goal</TableHead>
-            <TableHead>Daily calories</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data?.plans.map((plan: PlanT) => (
-            <TableRow key={plan._id}>
-              <TableCell>{plan.name}</TableCell>
-              <TableCell>{plan.description}</TableCell>
-              <TableCell>{plan.goal}</TableCell>
-              <TableCell>{plan.dailyCalories}</TableCell>
-              <TableCell>
-                <Button
-                  variant="outline"
-                  className="mr-2"
-                  onClick={() =>
-                    router.push(`/management/plans/edit/${plan._id}`)
-                  }
-                >
-                  Edit/View
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => handleDelete(plan._id)}
-                >
-                  Delete
-                </Button>
-              </TableCell>
+      <div className={"rounded-md border"}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead>Goal</TableHead>
+              <TableHead>Daily calories</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {data?.plans.map((plan: PlanT) => (
+              <TableRow key={plan._id}>
+                <TableCell>{plan.name}</TableCell>
+                <TableCell>{plan.description}</TableCell>
+                <TableCell>{plan.goal}</TableCell>
+                <TableCell>{plan.dailyCalories}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="outline"
+                    className="mr-2"
+                    onClick={() =>
+                      router.push(`/management/plans/edit/${plan._id}`)
+                    }
+                  >
+                    Edit/View
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => handleDelete(plan._id)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       <div className="mt-4 flex justify-between">
         <Button
           onClick={() => setPage((p) => Math.max(1, p - 1))}

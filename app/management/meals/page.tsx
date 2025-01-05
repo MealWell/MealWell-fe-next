@@ -47,56 +47,58 @@ export default function MealsPage() {
       >
         Create Meal
       </Button>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Calories</TableHead>
-            <TableHead>Proteins</TableHead>
-            <TableHead>Fats</TableHead>
-            <TableHead>Carbohydrates</TableHead>
-            <TableHead>Fibers</TableHead>
-            <TableHead>Sugars</TableHead>
-            <TableHead>Sodium</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data?.meals.map((meal) => (
-            <TableRow key={meal._id}>
-              <TableCell>{meal.name}</TableCell>
-              <TableCell>{meal.description}</TableCell>
-              <TableCell>{meal.type}</TableCell>
-              <TableCell>{meal.totalCalories}</TableCell>
-              <TableCell>{meal.totalProteins}</TableCell>
-              <TableCell>{meal.totalFats}</TableCell>
-              <TableCell>{meal.totalCarbs}</TableCell>
-              <TableCell>{meal.totalFiber}</TableCell>
-              <TableCell>{meal.totalSugar}</TableCell>
-              <TableCell>{meal.totalSodium}</TableCell>
-              <TableCell>
-                <Button
-                  variant="outline"
-                  className="mr-2"
-                  onClick={() =>
-                    router.push(`/management/meals/edit/${meal._id}`)
-                  }
-                >
-                  Edit/View
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => handleDelete(meal._id)}
-                >
-                  Delete
-                </Button>
-              </TableCell>
+      <div className={"rounded-md border"}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Calories</TableHead>
+              <TableHead>Proteins</TableHead>
+              <TableHead>Fats</TableHead>
+              <TableHead>Carbohydrates</TableHead>
+              <TableHead>Fibers</TableHead>
+              <TableHead>Sugars</TableHead>
+              <TableHead>Sodium</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {data?.meals.map((meal) => (
+              <TableRow key={meal._id}>
+                <TableCell>{meal.name}</TableCell>
+                <TableCell>{meal.description}</TableCell>
+                <TableCell className={"capitalize"}>{meal.type}</TableCell>
+                <TableCell>{meal.totalCalories}</TableCell>
+                <TableCell>{meal.totalProteins}</TableCell>
+                <TableCell>{meal.totalFats}</TableCell>
+                <TableCell>{meal.totalCarbs}</TableCell>
+                <TableCell>{meal.totalFiber}</TableCell>
+                <TableCell>{meal.totalSugar}</TableCell>
+                <TableCell>{meal.totalSodium}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="outline"
+                    className="mr-2"
+                    onClick={() =>
+                      router.push(`/management/meals/edit/${meal._id}`)
+                    }
+                  >
+                    Edit/View
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => handleDelete(meal._id)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       <div className="mt-4 flex justify-between">
         <Button
           onClick={() => setPage((p) => Math.max(1, p - 1))}

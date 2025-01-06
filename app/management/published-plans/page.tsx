@@ -19,29 +19,6 @@ import {
   useUpdatePublishedPlanBasePrice,
   useUpdatePublishedPlanIsActive,
 } from "@/hooks/usePublishedPlans";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  BicepsFlexed,
-  Check,
-  Leaf,
-  Ruler,
-  Scale,
-  Utensils,
-} from "lucide-react";
-import { TypographyP } from "@/components/typography/TypographyP";
-import { TypographyList } from "@/components/typography/TypographyList";
-import ResponsiveCarouselControls from "@/components/ui/responsive-carousel-controls";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -68,8 +45,7 @@ import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 import { Badge } from "@/components/ui/badge";
 import { useAuthorization } from "@/hooks/useAuthorization";
 import { useRouter } from "next/navigation";
-
-const iconClass = "w-6 h-6 flex-shrink-0 mr-2";
+import PublishedPlansCarousel from "@/components/PublishedPlansCarousel";
 
 export default function PublishedPlansPage() {
   const [page, setPage] = useState(1);
@@ -113,46 +89,6 @@ export default function PublishedPlansPage() {
         });
       },
     });
-  };
-
-  const getPlanTitleComponents = (goal: string, planName: string) => {
-    switch (goal) {
-      case "weight_loss":
-        return (
-          <>
-            <Ruler className={iconClass} />
-            <span>{`Weight Loss | ${planName}`}</span>
-          </>
-        );
-      case "muscle_gain":
-        return (
-          <>
-            <BicepsFlexed className={iconClass} />
-            <span>{`Muscle Gain | ${planName}`}</span>
-          </>
-        );
-      case "vegetarian":
-        return (
-          <>
-            <Leaf className={iconClass} />
-            <span>{`Vegetarian | ${planName}`}</span>
-          </>
-        );
-      case "balanced":
-        return (
-          <>
-            <Scale className={iconClass} />
-            <span>{`Balanced | ${planName}`}</span>
-          </>
-        );
-      default:
-        return (
-          <>
-            <Utensils className={iconClass} />
-            <span>{` ${planName}`}</span>
-          </>
-        );
-    }
   };
 
   return (
@@ -253,61 +189,7 @@ export default function PublishedPlansPage() {
       </div>
       {data?.publishedPlans && data.publishedPlans.length > 0 && (
         <div className={"flex justify-center mt-4"}>
-          <Carousel className={"w-[80%]"}>
-            <CarouselContent>
-              {data?.publishedPlans.map((publishedPlan) => (
-                <CarouselItem
-                  key={publishedPlan._id}
-                  className={"basis-full md:basis-1/2 lg:basis-1/3"}
-                >
-                  <Card className="flex flex-col h-full">
-                    <CardHeader>
-                      <CardTitle className={"flex items-center"}>
-                        {getPlanTitleComponents(
-                          publishedPlan.goal,
-                          publishedPlan.name,
-                        )}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                      <TypographyP className={"text-muted-foreground text-sm"}>
-                        {publishedPlan.description}
-                      </TypographyP>
-                      <TypographyList className={"ml-0"}>
-                        {publishedPlan.keyFeatures.map((value, index) => (
-                          <li className="flex items-center text-sm" key={index}>
-                            <Check className="mr-2 h-4 w-4 text-success" />
-                            {value}
-                          </li>
-                        ))}
-                        <li className="flex items-center text-sm">
-                          <Check className="mr-2 h-4 w-4 text-success" />
-                          {publishedPlan.dailyCalories} kcal/day
-                        </li>
-                      </TypographyList>
-                    </CardContent>
-                    <CardFooter className="mt-auto pt-4 flex flex-col items-center w-full">
-                      <div className="text-lg font-semibold mb-4 text-center">
-                        Starting from &euro;{publishedPlan.basePrice}/month
-                      </div>
-                      <div className="flex flex-wrap justify-center gap-2 w-full">
-                        <Button className="flex-1 min-w-[120px]">
-                          Select Plan
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="flex-1 min-w-[120px]"
-                        >
-                          See Details
-                        </Button>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <ResponsiveCarouselControls />
-          </Carousel>
+          <PublishedPlansCarousel />
         </div>
       )}
 

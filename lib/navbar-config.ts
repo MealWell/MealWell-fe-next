@@ -8,6 +8,7 @@ type NavItem = {
 };
 
 export const navbarConfig: NavItem[] = [
+  { label: "Our Plans", href: "/plans", minRole: "anonymous" },
   { label: "Profile", href: "/profile", minRole: "user" },
   // { label: "Dashboard", href: "/dashboard", minRole: "user" },
   { label: "Management", href: "/management", minRole: "nutritionist" },

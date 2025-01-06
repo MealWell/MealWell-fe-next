@@ -18,8 +18,6 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const method = request.method;
 
-  console.log(pathname);
-
   const matchedRoute = routes.find((route) => {
     const pathMatch = route.regexp.exec(pathname);
     const methodMatch =

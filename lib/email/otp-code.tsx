@@ -81,6 +81,5 @@ export const OtpCodeVerificationEmail = ({
 };
 
 export function reactOtpCodeVerificationEmail(props: OtpCodeVerificationProps) {
-  console.log(props);
   return <OtpCodeVerificationEmail {...props} />;
 }

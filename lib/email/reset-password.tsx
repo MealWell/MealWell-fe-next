@@ -92,6 +92,5 @@ export const ResetPasswordEmail = ({
 export function reactResetPasswordEmail(
   props: BetterAuthResetPasswordEmailProps,
 ) {
-  console.log(props);
   return <ResetPasswordEmail {...props} />;
 }

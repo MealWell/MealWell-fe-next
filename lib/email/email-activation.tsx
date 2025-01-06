@@ -93,6 +93,5 @@ export const EmailVerificationEmail = ({
 };
 
 export function reactEmailVerificationEmail(props: EmailVerificationProps) {
-  console.log(props);
   return <EmailVerificationEmail {...props} />;
 }

@@ -29,7 +29,7 @@ export const auth = betterAuth({
   },
   emailVerification: {
     async sendVerificationEmail({ user, url }) {
-      const res = await resend.emails.send({
+      await resend.emails.send({
         from,
         to: user.email || to,
         subject: "Verify your email address",
@@ -38,7 +38,6 @@ export const auth = betterAuth({
           verificationUrl: url,
         }),
       });
-      console.log(res, user.email);
     },
   },
   account: {

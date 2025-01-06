@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     try {
       body = await request.json();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return NextResponse.json(
         {
           message: "Could not get data",
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       {
         message: "Something went wrong.",

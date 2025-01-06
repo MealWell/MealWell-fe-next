@@ -298,6 +298,7 @@ function IngredientForm(props: IngredientFormProps) {
                   type="number"
                   {...field}
                   min={0}
+                  step={"any"}
                   onChange={(event) =>
                     field.onChange(Number(event.target.value))
                   }
@@ -318,6 +319,7 @@ function IngredientForm(props: IngredientFormProps) {
                   type="number"
                   {...field}
                   min={0}
+                  step={"any"}
                   onChange={(event) =>
                     field.onChange(Number(event.target.value))
                   }
@@ -338,6 +340,7 @@ function IngredientForm(props: IngredientFormProps) {
                   type="number"
                   {...field}
                   min={0}
+                  step={"any"}
                   onChange={(event) =>
                     field.onChange(Number(event.target.value))
                   }
@@ -358,6 +361,7 @@ function IngredientForm(props: IngredientFormProps) {
                   type="number"
                   {...field}
                   min={0}
+                  step={"any"}
                   onChange={(event) =>
                     field.onChange(Number(event.target.value))
                   }
@@ -378,6 +382,7 @@ function IngredientForm(props: IngredientFormProps) {
                   type="number"
                   {...field}
                   min={0}
+                  step={"any"}
                   onChange={(event) =>
                     field.onChange(Number(event.target.value))
                   }
@@ -398,6 +403,7 @@ function IngredientForm(props: IngredientFormProps) {
                   type="number"
                   {...field}
                   min={0}
+                  step={"any"}
                   onChange={(event) =>
                     field.onChange(Number(event.target.value))
                   }
@@ -417,6 +423,7 @@ function IngredientForm(props: IngredientFormProps) {
                 <Input
                   type="number"
                   min={0}
+                  step={"any"}
                   {...field}
                   onChange={(event) =>
                     field.onChange(Number(event.target.value))

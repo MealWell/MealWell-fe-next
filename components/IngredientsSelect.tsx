@@ -57,6 +57,7 @@ export function IngredientSelect({
       <Input
         type="number"
         placeholder="Quantity (g)"
+        step={"any"}
         value={quantity}
         onChange={(e) => setQuantity(e.target.value)}
       />

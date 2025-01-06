@@ -1,5 +1,5 @@
 import { model, models, Schema, Types } from "mongoose";
-import { MealT } from "@/model/Meal";
+import Meal, { MealT } from "@/model/Meal";
 
 export interface PlanT {
   _id: string;
@@ -21,7 +21,7 @@ const PlanSchema = new Schema({
     required: true,
   },
   dailyCalories: { type: Number, required: true, default: 0 },
-  meals: [{ type: Types.ObjectId, ref: "Meal", required: true }],
+  meals: [{ type: Types.ObjectId, ref: Meal, required: true }],
   keyFeatures: [{ type: String, required: true }],
 });
 

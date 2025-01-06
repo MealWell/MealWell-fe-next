@@ -1,6 +1,8 @@
 import { model, models, Schema, Types } from "mongoose";
-import { AllergenT } from "@/model/Allergen";
-import { DietaryPreferenceT } from "@/model/DietaryPreference";
+import Allergen, { AllergenT } from "@/model/Allergen";
+import DietaryPreference, {
+  DietaryPreferenceT,
+} from "@/model/DietaryPreference";
 
 export interface IngredientT {
   _id: string;
@@ -25,8 +27,8 @@ const IngredientSchema = new Schema({
   fiber: { type: Number, required: true },
   sugar: { type: Number, required: true },
   sodium: { type: Number, required: true },
-  allergens: [{ type: Types.ObjectId, ref: "Allergen" }],
-  dietaryPreferences: [{ type: Types.ObjectId, ref: "DietaryPreference" }],
+  allergens: [{ type: Types.ObjectId, ref: Allergen }],
+  dietaryPreferences: [{ type: Types.ObjectId, ref: DietaryPreference }],
 });
 
 const Ingredient =

@@ -1,7 +1,7 @@
 import { model, models, Schema, Types } from "mongoose";
-import { IngredientT } from "@/model/Ingredient";
-import { AllergenT } from "@/model/Allergen";
-import { DietaryPreferenceT } from "@/model/DietaryPreference";
+import Ingredient, { IngredientT } from "@/model/Ingredient";
+import Allergen, { AllergenT } from "@/model/Allergen";
+import DietaryPreference, { DietaryPreferenceT } from "@/model/DietaryPreference";
 
 export interface MealT {
   _id: string;
@@ -25,7 +25,7 @@ const MealSchema = new Schema({
   description: { type: String, required: false },
   ingredients: [
     {
-      ingredient: { type: Types.ObjectId, ref: "Ingredient", required: true },
+      ingredient: { type: Types.ObjectId, ref: Ingredient, required: true },
       quantity: { type: Number, required: true },
     },
   ],
@@ -36,8 +36,8 @@ const MealSchema = new Schema({
   totalFiber: { type: Number, required: true },
   totalSugar: { type: Number, required: true },
   totalSodium: { type: Number, required: true },
-  allergens: [{ type: Types.ObjectId, ref: "Allergen" }],
-  dietaryPreferences: [{ type: Types.ObjectId, ref: "DietaryPreference" }],
+  allergens: [{ type: Types.ObjectId, ref: Allergen }],
+  dietaryPreferences: [{ type: Types.ObjectId, ref: DietaryPreference }],
   type: {
     type: String,
     enum: ["breakfast", "snack", "lunch", "dinner"],

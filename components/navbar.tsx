@@ -6,11 +6,8 @@ import { ChefHat, X } from "lucide-react";
 import { FaHamburger } from "react-icons/fa";
 import posthog from "posthog-js";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useSession } from "@/lib/auth-client";
-interface NavItem {
-  href: string;
-  label: string;
-}
+import { useAuthorization } from "@/hooks/useAuthorization";
+import { navbarConfig } from "@/lib/navbar-config";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -25,22 +22,19 @@ export default function Navbar() {
       }
     });
   }, [setFikiEnabled]);
+  const { isAuthorized, isAuthenticated } = useAuthorization();
 
-  const session = useSession();
+  const navItems = navbarConfig.filter((item) => {
+    const hasAccess =
+      isAuthorized(item.minRole) &&
+      (!item.showWhen ||
+        (item.showWhen === "authenticated" && isAuthenticated) ||
+        (item.showWhen === "unauthenticated" && isAuthenticated === false));
 
-  const isLogged = !!session?.data && !session.isPending;
-  const userRole = session?.data?.user.role;
+    const isFiki = item.href.startsWith("/fiki");
 
-  const navItems: NavItem[] = [
-    fikiEnabled && { href: "/fiki", label: "Fiki" },
-    !isLogged && { href: "/sign-in", label: "Sign In" },
-    isLogged && { href: "/profile", label: "Profile" },
-    isLogged &&
-      userRole === "admin" && {
-        href: "/admin",
-        label: "Admin dashboard",
-      },
-  ].filter((item): item is NavItem => Boolean(item));
+    return isFiki ? hasAccess && fikiEnabled : hasAccess;
+  });
 
   return (
     <>

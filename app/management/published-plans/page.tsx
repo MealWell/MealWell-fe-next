@@ -66,6 +66,7 @@ import {
 import { PublishedPlanT } from "@/model/PublishedPlan";
 import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 import { Badge } from "@/components/ui/badge";
+import { useAuthorization } from "@/hooks/useAuthorization";
 
 const iconClass = "w-6 h-6 flex-shrink-0 mr-2";
 
@@ -80,6 +81,10 @@ export default function PublishedPlansPage() {
   const deletePublishedPlan = useDeletePublishedPlan();
   const setIsActive = useUpdatePublishedPlanIsActive();
   const { showConfirmationModal } = useConfirmationModal();
+
+  const { isAuthorized } = useAuthorization();
+
+  const isAdmin = isAuthorized("admin");
 
   if (isLoading) return <LoadingSkeleton />;
   if (error) return <ErrorDisplay message={error.message} />;
@@ -178,34 +183,40 @@ export default function PublishedPlansPage() {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end space-x-2">
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        handleSetIsActive(
-                          publishedPlan._id,
-                          !publishedPlan.isActive,
-                        );
-                      }}
-                    >
-                      {publishedPlan.isActive ? "Deactivate" : "Activate"}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setEditingPublishedPlan(publishedPlan);
-                        setIsEditModalOpen(true);
-                      }}
-                    >
-                      Update price
-                    </Button>
-                    <Button
-                      variant={"destructive"}
-                      onClick={() => handleDelete(publishedPlan._id)}
-                      size={"sm"}
-                    >
-                      Delete
-                    </Button>
+                    {isAdmin && (
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          handleSetIsActive(
+                            publishedPlan._id,
+                            !publishedPlan.isActive,
+                          );
+                        }}
+                      >
+                        {publishedPlan.isActive ? "Deactivate" : "Activate"}
+                      </Button>
+                    )}
+                    {isAdmin && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setEditingPublishedPlan(publishedPlan);
+                          setIsEditModalOpen(true);
+                        }}
+                      >
+                        Update price
+                      </Button>
+                    )}
+                    {isAdmin && (
+                      <Button
+                        variant={"destructive"}
+                        onClick={() => handleDelete(publishedPlan._id)}
+                        size={"sm"}
+                      >
+                        Delete
+                      </Button>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

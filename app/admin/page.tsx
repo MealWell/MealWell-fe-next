@@ -48,6 +48,8 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
+import { authorizedRoles, getDisplayValue, Role } from "@/lib/auth-config";
+import SetUserRoleDialogForm from "@/components/SetUserRoleDialogForm";
 
 export default function AdminDashboard() {
   const queryClient = useQueryClient();
@@ -56,7 +58,7 @@ export default function AdminDashboard() {
     email: "",
     password: "",
     name: "",
-    role: "user" as const,
+    role: "user" as Role,
   });
   const [isLoading, setIsLoading] = useState<string | undefined>();
   const [isBanDialogOpen, setIsBanDialogOpen] = useState(false);
@@ -65,6 +67,12 @@ export default function AdminDashboard() {
     reason: "",
     expirationDate: undefined as Date | undefined,
   });
+
+  const [editingUserRole, setEditingUserRole] = useState<{
+    userId: string;
+    userRole: Role;
+  } | null>(null);
+  const [isSetRoleDialogOpen, setIsSetRoleDialogOpen] = useState(false);
 
   const { showConfirmationModal } = useConfirmationModal();
   const [page, setPage] = useState(1);
@@ -274,16 +282,21 @@ export default function AdminDashboard() {
                   <Label htmlFor="role">Role</Label>
                   <Select
                     value={newUser.role}
-                    onValueChange={(value: "admin" | "user") =>
-                      setNewUser({ ...newUser, role: value as "user" })
+                    onValueChange={(value: Role) =>
+                      setNewUser({ ...newUser, role: value as Role })
                     }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select role" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="user">User</SelectItem>
+                      {Object.entries(authorizedRoles).map(
+                        ([key, roleInfo]) => (
+                          <SelectItem key={key} value={roleInfo.value}>
+                            {roleInfo.displayValue}
+                          </SelectItem>
+                        ),
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
@@ -396,7 +409,9 @@ export default function AdminDashboard() {
                     <TableRow key={user.id}>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.name}</TableCell>
-                      <TableCell>{user.role || "user"}</TableCell>
+                      <TableCell>
+                        {getDisplayValue((user.role || "user") as Role)}
+                      </TableCell>
                       <TableCell>
                         {user.banned ? (
                           <Badge variant="destructive">Yes</Badge>
@@ -461,6 +476,20 @@ export default function AdminDashboard() {
                               "Ban"
                             )}
                           </Button>
+                          <Button
+                            variant={"default"}
+                            size={"sm"}
+                            onClick={() => {
+                              setIsSetRoleDialogOpen(true);
+                              setEditingUserRole({
+                                userId: user.id,
+                                userRole: (user.role || "user") as Role,
+                              });
+                            }}
+                            disabled={isLoading?.startsWith("setRole")}
+                          >
+                            Set role
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -485,6 +514,23 @@ export default function AdminDashboard() {
           )}
         </CardContent>
       </Card>
+      <Dialog open={isSetRoleDialogOpen} onOpenChange={setIsSetRoleDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Set user role</DialogTitle>
+            <DialogDescription className={"sr-only"}>
+              Set user role diagram
+            </DialogDescription>
+          </DialogHeader>
+          {editingUserRole && (
+            <SetUserRoleDialogForm
+              onSubmitSuccess={() => setIsSetRoleDialogOpen(false)}
+              initialRole={editingUserRole.userRole}
+              id={editingUserRole.userId}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

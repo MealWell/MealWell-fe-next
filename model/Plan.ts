@@ -9,6 +9,7 @@ export interface PlanT {
   dailyCalories: number;
   meals: MealT[];
   keyFeatures: string[];
+  isPublished?: boolean;
 }
 
 const PlanSchema = new Schema({

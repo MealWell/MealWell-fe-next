@@ -17,6 +17,29 @@ import { PlanT } from "@/model/Plan";
 import { useRouter } from "next/navigation";
 import { TypographyH2 } from "@/components/typography/TypographyH2";
 import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { usePublishPlan } from "@/hooks/usePublishedPlans";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { PublishedPlanSchema } from "@/validation/publishedPlan";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 export default function PlansPage() {
   const [page, setPage] = useState(1);
@@ -26,7 +49,10 @@ export default function PlansPage() {
 
   const router = useRouter();
 
+  const [isPublishPlanModalOpen, setIsPublishPlanModalOpen] = useState(false);
   const { showConfirmationModal } = useConfirmationModal();
+
+  const [editingPlan, setEditingPlan] = useState<PlanT | null>(null);
 
   if (isLoading) return <LoadingSkeleton />;
   if (error) return <ErrorDisplay message={error.message} />;
@@ -58,6 +84,7 @@ export default function PlansPage() {
               <TableHead>Description</TableHead>
               <TableHead>Goal</TableHead>
               <TableHead>Daily calories</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -69,6 +96,24 @@ export default function PlansPage() {
                 <TableCell>{plan.goal}</TableCell>
                 <TableCell>{plan.dailyCalories}</TableCell>
                 <TableCell>
+                  {plan.isPublished ? (
+                    <Badge variant="success">Published</Badge>
+                  ) : (
+                    <Badge variant="outline">Draft</Badge>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="default"
+                    className="mr-2"
+                    onClick={() => {
+                      setEditingPlan(plan);
+                      setIsPublishPlanModalOpen(true);
+                    }}
+                    disabled={plan.isPublished}
+                  >
+                    Publish Plan
+                  </Button>
                   <Button
                     variant="outline"
                     className="mr-2"
@@ -104,6 +149,100 @@ export default function PlansPage() {
           Next
         </Button>
       </div>
+
+      <Dialog
+        open={isPublishPlanModalOpen}
+        onOpenChange={setIsPublishPlanModalOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Publish plan</DialogTitle>
+            <DialogDescription className={"sr-only"}>
+              Publish plan
+            </DialogDescription>
+          </DialogHeader>
+          {editingPlan && (
+            <PublishPlanForm
+              onSubmitSuccess={() => {
+                setEditingPlan(null);
+                setIsPublishPlanModalOpen(false);
+              }}
+              id={editingPlan._id}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
+  );
+}
+
+type PublishPlanFormProps = {
+  onSubmitSuccess: () => void;
+  id: string;
+};
+
+function PublishPlanForm(props: PublishPlanFormProps) {
+  const { onSubmitSuccess, id } = props;
+
+  const publishPlan = usePublishPlan();
+  const { showConfirmationModal } = useConfirmationModal();
+
+  const form = useForm<z.infer<typeof PublishedPlanSchema>>({
+    resolver: zodResolver(PublishedPlanSchema),
+    defaultValues: {
+      id: id,
+      basePrice: 0,
+    },
+  });
+
+  const onUpdateSubmit = (data: z.infer<typeof PublishedPlanSchema>) => {
+    showConfirmationModal({
+      title: "Confirm publishing plan",
+      description: "Are you sure you want to publish this plan?",
+      onConfirm: () => {
+        publishPlan
+          .mutateAsync({
+            id: id,
+            basePrice: data.basePrice,
+          })
+          .then(onSubmitSuccess)
+          .catch((error: AxiosError<{ error: string }>) => {
+            form.setError("root", { message: error.response?.data.error });
+          });
+      },
+    });
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onUpdateSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="basePrice"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>BasePrice (&euro; / month)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  {...field}
+                  placeholder={`Set a base price per month for the publishing plan`}
+                  min={0}
+                  step={"any"}
+                  onChange={(event) =>
+                    field.onChange(Number(event.target.value))
+                  }
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormMessage>{form.formState.errors.root?.message}</FormMessage>
+        <Button type="submit" className="w-full mt-4">
+          Submit
+        </Button>
+      </form>
+    </Form>
   );
 }

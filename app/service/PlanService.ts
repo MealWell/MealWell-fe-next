@@ -1,9 +1,10 @@
-import Plan from "@/model/Plan";
+import Plan, { PlanT } from "@/model/Plan";
 import { MealT } from "@/model/Meal";
 import connectMongo from "@/db/mongoose";
 import { getMealById } from "@/app/service/MealService";
 import { z } from "zod";
 import { PlanPartialSchema, PlanSchema } from "@/validation/plan";
+import { getPublishedPlansIds } from "@/app/service/PublishedPlanService";
 
 export async function calculateDailyCalories(meals: string[]) {
   const mealCategories = {
@@ -83,7 +84,35 @@ export async function updatePlan(
 
 export async function getPlanById(id: string) {
   try {
-    return await Plan.findById(id).populate("meals");
+    await connectMongo();
+    const publishedPlansIds = await getPublishedPlansIds();
+    const plan: PlanT | null = await Plan.findById(id)
+      .populate("meals")
+      .populate({
+        path: "meals",
+        populate: [
+          { path: "allergens" },
+          { path: "dietaryPreferences" },
+          {
+            path: "ingredients.ingredient",
+            populate: [{ path: "allergens" }, { path: "dietaryPreferences" }],
+          },
+        ],
+      })
+      .lean<PlanT>();
+
+    if (!plan) throw new Error("Plan not found");
+
+    return {
+      _id: plan._id.toString(),
+      name: plan.name,
+      description: plan.description,
+      goal: plan.goal,
+      dailyCalories: plan.dailyCalories,
+      meals: plan.meals,
+      keyFeatures: plan.keyFeatures,
+      isPublished: publishedPlansIds.has(plan?._id.toString()),
+    };
   } catch (e) {
     console.error(e);
     throw e;
@@ -92,7 +121,28 @@ export async function getPlanById(id: string) {
 
 export async function getAllPlans() {
   try {
-    return await Plan.find().populate("meals");
+    await connectMongo();
+    const publishedPlansIds = await getPublishedPlansIds();
+
+    const plans = await Plan.find()
+      .populate("meals")
+      .populate({
+        path: "meals",
+        populate: [
+          { path: "allergens" },
+          { path: "dietaryPreferences" },
+          {
+            path: "ingredients.ingredient",
+            populate: [{ path: "allergens" }, { path: "dietaryPreferences" }],
+          },
+        ],
+      })
+      .lean<PlanT[]>();
+
+    return plans.map((plan) => ({
+      ...plan,
+      isPublished: publishedPlansIds.has(plan._id.toString()),
+    }));
   } catch (e) {
     console.error(e);
     throw e;
@@ -101,10 +151,34 @@ export async function getAllPlans() {
 
 export async function getPaginatedPlans(page: number, limit: number) {
   try {
+    await connectMongo();
     const skip = (page - 1) * limit;
-    const plans = await Plan.find().skip(skip).limit(limit).populate("meals");
+
+    const publishedPlansIds = await getPublishedPlansIds();
+    const plans = await Plan.find()
+      .skip(skip)
+      .limit(limit)
+      .populate("meals")
+      .populate({
+        path: "meals",
+        populate: [
+          { path: "allergens" },
+          { path: "dietaryPreferences" },
+          {
+            path: "ingredients.ingredient",
+            populate: [{ path: "allergens" }, { path: "dietaryPreferences" }],
+          },
+        ],
+      })
+      .lean<PlanT[]>();
     const count = await Plan.countDocuments();
-    return { plans, count };
+    return {
+      plans: plans.map((plan) => ({
+        ...plan,
+        isPublished: publishedPlansIds.has(plan._id.toString()),
+      })),
+      count,
+    };
   } catch (e) {
     console.error(e);
     throw e;

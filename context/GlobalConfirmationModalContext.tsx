@@ -52,7 +52,7 @@ export function GlobalConfirmationModalProvider({
     <GlobalModalContext.Provider value={{ showConfirmationModal, closeModal }}>
       {children}
       {modalConfig.isOpen ? (
-        <Dialog open={modalConfig.isOpen}>
+        <Dialog open={modalConfig.isOpen} onOpenChange={closeModal}>
           <DialogContent>
             <DialogTitle>{modalConfig.title}</DialogTitle>
             <DialogDescription>{modalConfig.description}</DialogDescription>

@@ -9,7 +9,7 @@ export function ErrorDisplay({ message }: ErrorDisplayProps) {
   return (
     <Alert variant="destructive">
       <AlertCircle className="h-4 w-4" />
-      <AlertTitle>Eroare</AlertTitle>
+      <AlertTitle>Error</AlertTitle>
       <AlertDescription>{message}</AlertDescription>
     </Alert>
   );

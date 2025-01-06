@@ -32,6 +32,17 @@ export function useAllPublishedPlans() {
   });
 }
 
+export function usePublishedPlan(id?: string) {
+  return useQuery<PublishedPlanT>({
+    queryKey: ["published-plan", id],
+    queryFn: async () => {
+      const { data } = await axios.get(`${API_URL}/${id}`);
+      return data;
+    },
+    enabled: !!id,
+  });
+}
+
 export function useUpdatePublishedPlanBasePrice() {
   const queryClient = useQueryClient();
   return useMutation({

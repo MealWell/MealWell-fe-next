@@ -67,6 +67,7 @@ import { PublishedPlanT } from "@/model/PublishedPlan";
 import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 import { Badge } from "@/components/ui/badge";
 import { useAuthorization } from "@/hooks/useAuthorization";
+import { useRouter } from "next/navigation";
 
 const iconClass = "w-6 h-6 flex-shrink-0 mr-2";
 
@@ -83,6 +84,8 @@ export default function PublishedPlansPage() {
   const { showConfirmationModal } = useConfirmationModal();
 
   const { isAuthorized } = useAuthorization();
+
+  const router = useRouter();
 
   const isAdmin = isAuthorized("admin");
 
@@ -217,6 +220,16 @@ export default function PublishedPlansPage() {
                         Delete
                       </Button>
                     )}
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        router.push(
+                          `/view-published-plan/${publishedPlan._id}`,
+                        );
+                      }}
+                    >
+                      View Plan Details
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

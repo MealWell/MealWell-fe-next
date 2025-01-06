@@ -1,12 +1,33 @@
 import { model, models, Schema, Types } from "mongoose";
 import { PlanT } from "@/model/Plan";
+import { DietaryPreferenceT } from "@/model/DietaryPreference";
+import { AllergenT } from "@/model/Allergen";
+import { MealT } from "@/model/Meal";
 
-export interface PublishedPlanT extends Omit<PlanT, "_id"> {
+export interface PublishedPlanT extends Omit<PlanT, "meals"> {
   _id: string;
   basePrice: number;
   isActive: boolean;
   publishedAt: Date | null;
   draftPlanId: string;
+  meals: PublishedMealT[];
+}
+
+export interface PublishedMealT extends Omit<MealT, "ingredients"> {
+  ingredients: {
+    _id: string;
+    name: string;
+    calories: number;
+    proteins: number;
+    fats: number;
+    carbohydrates: number;
+    fiber: number;
+    sugar: number;
+    sodium: number;
+    allergens?: AllergenT[];
+    dietaryPreferences?: DietaryPreferenceT[];
+    quantity: number;
+  }[];
 }
 
 const PublishedPlanSchema = new Schema({

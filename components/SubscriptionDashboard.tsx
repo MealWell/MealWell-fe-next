@@ -83,7 +83,7 @@ export default function SubscriptionDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Calories Today
+              Calories Today (Placeholder Data)
             </CardTitle>
             <Utensils className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -94,7 +94,9 @@ export default function SubscriptionDashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Next Delivery</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Next Delivery (Placeholder Data)
+            </CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -155,7 +157,7 @@ export default function SubscriptionDashboard() {
           <div className="grid gap-4 md:grid-cols-3">
             <Card>
               <CardHeader>
-                <CardTitle>Breakfast</CardTitle>
+                <CardTitle>Breakfast (Placeholder Data)</CardTitle>
               </CardHeader>
               <CardContent>
                 <p>Avocado Toast with Poached Eggs</p>
@@ -164,7 +166,7 @@ export default function SubscriptionDashboard() {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Lunch</CardTitle>
+                <CardTitle>Lunch (Placeholder Data)</CardTitle>
               </CardHeader>
               <CardContent>
                 <p>Grilled Chicken Salad</p>
@@ -173,7 +175,7 @@ export default function SubscriptionDashboard() {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Dinner</CardTitle>
+                <CardTitle>Dinner (Placeholder Data)</CardTitle>
               </CardHeader>
               <CardContent>
                 <p>Baked Salmon with Roasted Vegetables</p>
@@ -185,7 +187,7 @@ export default function SubscriptionDashboard() {
         <TabsContent value="upcoming" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Upcoming Deliveries</CardTitle>
+              <CardTitle>Upcoming Deliveries (Placeholder Data)</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

@@ -25,6 +25,7 @@ import Link from "next/link";
 import SkeletonCard from "@/components/SkeletonCard";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
 import { useRouter } from "next/navigation";
+import { logEventClient, PostHogEventType } from "@/lib/posthog";
 
 const steps = ["Plan Selection", "Customize Menu", "Delivery Setup"];
 
@@ -66,6 +67,11 @@ export default function SubscriptionForm() {
 
   const onSubmit = async (data: z.infer<typeof SubscriptionSchema>) => {
     await subscribeMutation.mutateAsync(data);
+    logEventClient({
+      eventType: PostHogEventType.SUBMIT_FORM,
+      form: "plan_subscription",
+      submitStatus: "success",
+    });
     router.push("/dashboard");
   };
 

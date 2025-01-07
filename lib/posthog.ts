@@ -17,7 +17,7 @@ type PageViewedEvent = BaseEventProperties & {
   path: string;
 };
 
-type FormIdentifier = "newsletter";
+type FormIdentifier = "newsletter" | "plan_subscription" | "cancel_plan";
 
 type FormSubmitEvent = BaseEventProperties & {
   eventType: PostHogEventType.SUBMIT_FORM;
@@ -28,9 +28,12 @@ type FormSubmitEvent = BaseEventProperties & {
 type ClickedButtonEvent = BaseEventProperties & {
   eventType: PostHogEventType.CLICKED_BUTTON;
   buttonName: string;
-}
+};
 
-export type PostHogEventProperties = PageViewedEvent | FormSubmitEvent | ClickedButtonEvent;
+export type PostHogEventProperties =
+  | PageViewedEvent
+  | FormSubmitEvent
+  | ClickedButtonEvent;
 
 export const logEventClient = (properties: PostHogEventProperties) => {
   posthog.capture(properties.eventType, properties);

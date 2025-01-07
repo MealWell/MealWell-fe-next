@@ -2,14 +2,14 @@
 
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardDescription,
   CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Utensils, Calendar, Settings } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Calendar, Settings, Utensils } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useAuthorization } from "@/hooks/useAuthorization";
@@ -23,6 +23,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useConfirmationModal } from "@/context/GlobalConfirmationModalContext";
 import Link from "next/link";
+import { logEventClient, PostHogEventType } from "@/lib/posthog";
 
 export default function SubscriptionDashboard() {
   const { isAuthenticated, user, isPending } = useAuthorization();
@@ -50,6 +51,11 @@ export default function SubscriptionDashboard() {
       description: "Are you sure you want to cancel this subscription?",
       onConfirm: async () => {
         await cancelSubscriptionMutation.mutateAsync();
+        logEventClient({
+          eventType: PostHogEventType.SUBMIT_FORM,
+          form: "cancel_plan",
+          submitStatus: "success",
+        });
       },
     });
   };

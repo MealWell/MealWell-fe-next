@@ -31,6 +31,7 @@ import { useRouter } from "next/navigation";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
 import SkeletonCard from "@/components/SkeletonCard";
 import { PublishedPlanT } from "@/model/PublishedPlan";
+import { logEventClient, PostHogEventType } from "@/lib/posthog";
 
 const iconClass = "w-6 h-6 flex-shrink-0 mr-2";
 
@@ -194,6 +195,10 @@ export default function PublishedPlansCarousel(
                     type={"button"}
                     className="flex-1 min-w-[120px]"
                     onClick={() => {
+                      logEventClient({
+                        eventType: PostHogEventType.CLICKED_BUTTON,
+                        buttonName: "See Plan Details",
+                      });
                       router.push(`/view-published-plan/${publishedPlan._id}`);
                     }}
                   >

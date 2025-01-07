@@ -121,7 +121,7 @@ const UserSubscriptionSchema = new Schema<UserSubscriptionT>({
     lastName: { type: String, required: true },
     address: { type: String, required: true },
     city: { type: String, required: true },
-    zipCode: { type: String, required: true },
+    zipCode: { type: String, required: false },
     phoneNumber: { type: String, required: true },
     specialDeliveryInstructions: { type: String },
     deliveryDays: {

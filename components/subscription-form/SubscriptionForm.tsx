@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -19,6 +20,8 @@ import { CustomFormContextProvider } from "@/components/subscription-form/Subscr
 import DeliverySetup from "@/components/subscription-form/DeliverySetup";
 import { Form } from "@/components/ui/form";
 import { useSubscribe } from "@/hooks/useSubscription";
+import { useAuthorization } from "@/hooks/useAuthorization";
+import Link from "next/link";
 
 const steps = ["Plan Selection", "Customize Menu", "Delivery Setup"];
 
@@ -48,6 +51,8 @@ export default function SubscriptionForm() {
 
   const subscribeMutation = useSubscribe();
 
+  const { isAuthenticated } = useAuthorization();
+
   const onSubmit = async (data: z.infer<typeof SubscriptionSchema>) => {
     await subscribeMutation.mutateAsync(data);
   };
@@ -55,6 +60,28 @@ export default function SubscriptionForm() {
   const nextStep = () =>
     setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
+
+  if (!isAuthenticated) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <Button
+              variant={"link"}
+              className={"p-0 text-base font-bold"}
+              asChild
+            >
+              <Link href={"/sign-in"}>Sign In</Link>
+            </Button>{" "}
+            to start a subscription
+          </CardTitle>
+          <CardDescription>
+            To start a plan subscription you should sign in
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
 
   return (
     <Form {...form}>

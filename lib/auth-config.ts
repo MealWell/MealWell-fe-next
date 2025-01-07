@@ -71,6 +71,11 @@ export const routes: RouteConfig[] = [
     minRole: "admin",
   },
   {
+    path: "/api/subscription",
+    regexp: pathToRegexp("/api/subscription{/*path}").regexp,
+    minRole: "user",
+  },
+  {
     path: "/management",
     regexp: pathToRegexp("/management{/*path}").regexp,
     minRole: "nutritionist",

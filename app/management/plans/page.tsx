@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useAuthorization } from "@/hooks/useAuthorization";
 
 export default function PlansPage() {
   const [page, setPage] = useState(1);
@@ -53,6 +54,9 @@ export default function PlansPage() {
   const { showConfirmationModal } = useConfirmationModal();
 
   const [editingPlan, setEditingPlan] = useState<PlanT | null>(null);
+
+  const { isAuthorized } = useAuthorization();
+  const isAdmin = isAuthorized("admin");
 
   if (isLoading) return <LoadingSkeleton />;
   if (error) return <ErrorDisplay message={error.message} />;
@@ -103,17 +107,19 @@ export default function PlansPage() {
                   )}
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant="default"
-                    className="mr-2"
-                    onClick={() => {
-                      setEditingPlan(plan);
-                      setIsPublishPlanModalOpen(true);
-                    }}
-                    disabled={plan.isPublished}
-                  >
-                    Publish Plan
-                  </Button>
+                  {isAdmin && (
+                    <Button
+                      variant="default"
+                      className="mr-2"
+                      onClick={() => {
+                        setEditingPlan(plan);
+                        setIsPublishPlanModalOpen(true);
+                      }}
+                      disabled={plan.isPublished}
+                    >
+                      Publish Plan
+                    </Button>
+                  )}
                   <Button
                     variant="outline"
                     className="mr-2"

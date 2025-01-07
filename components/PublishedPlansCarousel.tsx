@@ -30,6 +30,7 @@ import { useAllPublishedPlans } from "@/hooks/usePublishedPlans";
 import { useRouter } from "next/navigation";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
 import SkeletonCard from "@/components/SkeletonCard";
+import { PublishedPlanT } from "@/model/PublishedPlan";
 
 const iconClass = "w-6 h-6 flex-shrink-0 mr-2";
 
@@ -75,7 +76,15 @@ const getPlanTitleComponents = (goal: string, planName: string) => {
 
 const truncate = (num: number) => Math.trunc(num * 100) / 100;
 
-export default function PublishedPlansCarousel() {
+type PublishedPlansCarouselProps = {
+  selectButtonLabel?: string;
+  onSelectButton?: (selectedPlan: PublishedPlanT) => void;
+  selectedButtonId?: string;
+};
+
+export default function PublishedPlansCarousel(
+  props: PublishedPlansCarouselProps,
+) {
   const router = useRouter();
   const {
     data: publishedPlans,
@@ -159,7 +168,26 @@ export default function PublishedPlansCarousel() {
                   /month
                 </div>
                 <div className="flex flex-wrap justify-center gap-2 w-full">
-                  <Button className="flex-1 min-w-[120px]">Select Plan</Button>
+                  {props.onSelectButton && (
+                    <Button
+                      className="flex-1 min-w-[120px]"
+                      onClick={() => {
+                        props.onSelectButton
+                          ? props.onSelectButton(publishedPlan)
+                          : null;
+                      }}
+                      disabled={
+                        props.selectedButtonId
+                          ? publishedPlan._id === props.selectedButtonId
+                          : false
+                      }
+                    >
+                      {props.selectButtonLabel
+                        ? props.selectButtonLabel
+                        : "Select Plan"}
+                    </Button>
+                  )}
+
                   <Button
                     variant="outline"
                     className="flex-1 min-w-[120px]"

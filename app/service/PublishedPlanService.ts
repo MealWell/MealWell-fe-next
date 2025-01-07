@@ -1,5 +1,5 @@
 import { PlanT } from "@/model/Plan";
-import PublishedPlan from "@/model/PublishedPlan";
+import PublishedPlan, { PublishedPlanT } from "@/model/PublishedPlan";
 import { getPlanById } from "@/app/service/PlanService";
 import connectMongo from "@/db/mongoose";
 
@@ -86,7 +86,7 @@ export async function publishPlan(planId: string, basePrice: number) {
 export async function getPublishedPlanById(id: string) {
   try {
     await connectMongo();
-    return await PublishedPlan.findById(id).lean();
+    return await PublishedPlan.findById(id).lean<PublishedPlanT>();
   } catch (e) {
     console.error(e);
     throw e;

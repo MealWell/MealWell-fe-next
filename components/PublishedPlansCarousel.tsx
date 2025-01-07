@@ -172,9 +172,9 @@ export default function PublishedPlansCarousel(
                     <Button
                       className="flex-1 min-w-[120px]"
                       onClick={() => {
-                        props.onSelectButton
-                          ? props.onSelectButton(publishedPlan)
-                          : null;
+                        if (props.onSelectButton) {
+                          props.onSelectButton(publishedPlan);
+                        }
                       }}
                       disabled={
                         props.selectedButtonId

@@ -9,7 +9,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Edit2, Utensils, Calendar, Settings } from "lucide-react";
+import { Utensils, Calendar, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useAuthorization } from "@/hooks/useAuthorization";
@@ -196,10 +196,6 @@ export default function SubscriptionDashboard() {
                       3 meals, 2 snacks
                     </p>
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Edit2 className="h-4 w-4 mr-2" />
-                    Modify
-                  </Button>
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
@@ -208,10 +204,6 @@ export default function SubscriptionDashboard() {
                       3 meals, 2 snacks
                     </p>
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Edit2 className="h-4 w-4 mr-2" />
-                    Modify
-                  </Button>
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
@@ -220,10 +212,6 @@ export default function SubscriptionDashboard() {
                       3 meals, 2 snacks
                     </p>
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Edit2 className="h-4 w-4 mr-2" />
-                    Modify
-                  </Button>
                 </div>
               </div>
             </CardContent>

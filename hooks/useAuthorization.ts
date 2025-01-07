@@ -10,9 +10,11 @@ export function useAuthorization() {
   };
 
   return {
+    isPending,
     isAuthContextPending: isPending,
     isAuthorized,
     userRole,
     isAuthenticated: isPending ? null : !!session?.session,
+    user: session?.user,
   };
 }

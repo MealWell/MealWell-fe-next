@@ -1,10 +1,16 @@
-import { model, models, Schema, Types } from "mongoose";
+import { model, models, Schema } from "mongoose";
 import { PublishedPlanT } from "@/model/PublishedPlan";
 import { AllergenT } from "@/model/Allergen";
 import { DietaryPreferenceT } from "@/model/DietaryPreference";
-import {DeliveryTimes, DeliveryTimeT, Weekdays, WeekdayT} from "@/const/types";
+import {
+  DeliveryTimes,
+  DeliveryTimeT,
+  Weekdays,
+  WeekdayT,
+} from "@/const/types";
 
 export interface UserSubscriptionT {
+  _id: string;
   userId: string;
   planId: string;
   planData: PublishedPlanT;

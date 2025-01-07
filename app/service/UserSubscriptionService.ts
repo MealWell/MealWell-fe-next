@@ -1,9 +1,46 @@
-import UserSubscription from "@/model/UserSubscription";
+import UserSubscription, { UserSubscriptionT } from "@/model/UserSubscription";
 import { z } from "zod";
 import connectMongo from "@/db/mongoose";
 import { SubscriptionSchema } from "@/validation/userSubscription";
 import { getPublishedPlanById } from "@/app/service/PublishedPlanService";
 import { PublishedPlanT } from "@/model/PublishedPlan";
+
+export async function getActiveSubscription(
+  userId: string,
+): Promise<UserSubscriptionT | null> {
+  try {
+    await connectMongo();
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+    const activeSubscription = await UserSubscription.findOne({
+      userId: userId,
+      createdAt: { $gte: oneMonthAgo },
+    }).lean<UserSubscriptionT>();
+
+    return activeSubscription;
+  } catch (error) {
+    console.error("Error checking active subscription:", error);
+    throw error;
+  }
+}
+
+export async function cancelActivePlan(userId: string) {
+  try {
+    await connectMongo();
+
+    const activeSubscription = await getActiveSubscription(userId);
+
+    if (!activeSubscription) {
+      throw new Error("User does not have an active subscription.");
+    }
+
+    await UserSubscription.findByIdAndDelete(activeSubscription._id);
+  } catch (error) {
+    console.error("Error checking active subscription:", error);
+    throw error;
+  }
+}
 
 export async function createUserSubscription(
   userId: string,
@@ -12,10 +49,8 @@ export async function createUserSubscription(
   try {
     await connectMongo();
 
-    const existingSubscription = await UserSubscription.findOne({
-      userId: userId,
-    });
-    if (existingSubscription) {
+    const activeSubscription = await getActiveSubscription(userId);
+    if (activeSubscription) {
       throw new Error("User already has an active subscription.");
     }
 

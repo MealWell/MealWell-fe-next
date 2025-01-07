@@ -19,9 +19,12 @@ import CustomizeMenu from "@/components/subscription-form/CustomizeMenu";
 import { CustomFormContextProvider } from "@/components/subscription-form/SubscriptionFormContext";
 import DeliverySetup from "@/components/subscription-form/DeliverySetup";
 import { Form } from "@/components/ui/form";
-import { useSubscribe } from "@/hooks/useSubscription";
+import { useActiveSubscription, useSubscribe } from "@/hooks/useSubscription";
 import { useAuthorization } from "@/hooks/useAuthorization";
 import Link from "next/link";
+import SkeletonCard from "@/components/SkeletonCard";
+import { ErrorDisplay } from "@/components/ErrorDisplay";
+import { useRouter } from "next/navigation";
 
 const steps = ["Plan Selection", "Customize Menu", "Delivery Setup"];
 
@@ -53,8 +56,17 @@ export default function SubscriptionForm() {
 
   const { isAuthenticated } = useAuthorization();
 
+  const router = useRouter();
+
+  const {
+    data: activeSubscription,
+    isLoading: isLoadingUserSubscription,
+    isError,
+  } = useActiveSubscription();
+
   const onSubmit = async (data: z.infer<typeof SubscriptionSchema>) => {
     await subscribeMutation.mutateAsync(data);
+    router.push("/dashboard");
   };
 
   const nextStep = () =>
@@ -77,6 +89,29 @@ export default function SubscriptionForm() {
           </CardTitle>
           <CardDescription>
             To start a plan subscription you should sign in
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  if (isLoadingUserSubscription) {
+    return <SkeletonCard />;
+  }
+
+  if (isError) {
+    return (
+      <ErrorDisplay message={"Could not check currently active subscription"} />
+    );
+  }
+
+  if (activeSubscription) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>You already have a subscription</CardTitle>
+          <CardDescription>
+            Check your dashboard to manage your currently active subscription
           </CardDescription>
         </CardHeader>
       </Card>

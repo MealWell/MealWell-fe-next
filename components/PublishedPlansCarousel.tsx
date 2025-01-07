@@ -171,6 +171,7 @@ export default function PublishedPlansCarousel(
                   {props.onSelectButton && (
                     <Button
                       className="flex-1 min-w-[120px]"
+                      type={"button"}
                       onClick={() => {
                         if (props.onSelectButton) {
                           props.onSelectButton(publishedPlan);
@@ -190,6 +191,7 @@ export default function PublishedPlansCarousel(
 
                   <Button
                     variant="outline"
+                    type={"button"}
                     className="flex-1 min-w-[120px]"
                     onClick={() => {
                       router.push(`/view-published-plan/${publishedPlan._id}`);

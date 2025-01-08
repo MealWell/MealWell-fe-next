@@ -1,6 +1,7 @@
 import MVPAdmin from "./admin/MVPAdmin";
 import Description from "./MVPDescription";
 import MVPNutritionist from "./nutritionist/MVPNustritionist";
+import MVPUser from "./user/MVPUser";
 
 const Milestone7 = () => {
   return (
@@ -8,6 +9,7 @@ const Milestone7 = () => {
       <Description />
       <MVPAdmin />
       <MVPNutritionist />
+      <MVPUser />
     </div>
   );
 };

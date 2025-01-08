@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { EmblaCarouselType } from "embla-carousel";
 import {

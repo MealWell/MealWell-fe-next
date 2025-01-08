@@ -2,7 +2,7 @@ import { MVPPage } from "@/const/types";
 import { TypographyList } from "../../typography/TypographyList";
 import { TypographyP } from "../../typography/TypographyP";
 
-export const DashboardDescription = () => {
+const DashboardDescription = () => {
   return (
     <>
       <TypographyP>

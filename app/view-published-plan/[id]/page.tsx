@@ -28,7 +28,14 @@ import { ErrorDisplay } from "@/components/ErrorDisplay";
 import { usePublishedPlan } from "@/hooks/usePublishedPlans";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from "recharts";
 import { Check } from "lucide-react";
 import { TypographyList } from "@/components/typography/TypographyList";
 import { TypographyP } from "@/components/typography/TypographyP";
@@ -122,27 +129,32 @@ export default function MealPlanPage() {
         <h2 className="text-3xl font-bold mb-4 text-primary">
           Nutritional Overview
         </h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={macroData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {macroData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
+        <Card className={"max-w-xl mx-auto"}>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={macroData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {macroData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
       </div>
 
       <h2 className="text-3xl font-bold mb-4 text-primary">Meals</h2>

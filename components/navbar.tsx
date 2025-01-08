@@ -90,7 +90,11 @@ export default function Navbar() {
 
         {/* Mobile Navigation Menu */}
         {menuOpen && (
-          <nav className="sm:hidden">
+          <nav
+            className={
+              "sm:hidden absolute top-16 left-0 w-full bg-accent/80 z-50"
+            }
+          >
             <div className="space-y-1 px-2 pb-3 pt-2">
               {navItems.map((item) => (
                 <Link

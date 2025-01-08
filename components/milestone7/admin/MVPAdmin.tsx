@@ -1,8 +1,8 @@
 "use client";
 
-import { TypographyH4 } from "../typography/TypographyH4";
+import { TypographyH4 } from "../../typography/TypographyH4";
 import MVPAdminPages from "./MVPAdminPages";
-import MVPPagesCarousel from "./MVPPagesCarousel";
+import MVPPagesCarousel from "../MVPPagesCarousel";
 
 const MVPAdmin = () => {
   return (

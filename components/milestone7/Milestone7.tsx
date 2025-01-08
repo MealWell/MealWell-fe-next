@@ -1,4 +1,4 @@
-import MVPAdmin from "./MVPAdmin";
+import MVPAdmin from "./admin/MVPAdmin";
 import Description from "./MVPDescription";
 
 const Milestone7 = () => {
